@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VanaDarpan – Forest Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        :root {
+            --green-900: #0f2b1a;
+            --green-800: #1a4a2e;
+            --green-700: #256f45;
+            --green-600: #2e8b57;
+            --green-500: #3da36a;
+            --green-400: #6bc28a;
+            --green-300: #9cdbb3;
+            --green-200: #c8eed8;
+            --green-100: #e8f9ef;
+            --gold: #d4a54a;
+            --gold-light: #f0d68a;
+            --cream: #fcf8f0;
+            --dark: #1a1f1a;
+            --shadow: 0 20px 60px rgba(15,43,26,0.20);
+            --shadow-sm: 0 8px 30px rgba(15,43,26,0.12);
+            --radius: 20px;
+            --radius-sm: 12px;
+            --transition: 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--cream);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin:0 auto; padding:0 24px; }
+        .section-label {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--green-600);
+            background: var(--green-200);
+            padding: 4px 16px;
+            border-radius: 100px;
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+        .section-title span { color: var(--green-600); }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 34px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--green-600);
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(46,139,87,0.30);
+            font-family: inherit;
+        }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 14px 34px rgba(46,139,87,0.40); background: var(--green-700); }
+        .btn-outline { background:transparent; color:var(--green-600); box-shadow:inset 0 0 0 2px var(--green-600); }
+        .btn-outline:hover { background:var(--green-600); color:#fff; }
+        .btn-gold { background:var(--gold); color:var(--dark); box-shadow:0 8px 24px rgba(212,165,74,0.35); }
+        .btn-gold:hover { background:#c4963a; box-shadow:0 14px 34px rgba(212,165,74,0.45); }
+
+        header {
+            position: fixed;
+            top:0; left:0; width:100%; z-index:1000;
+            padding:16px 0;
+            transition: var(--transition);
+            background: transparent;
+        }
+        header.scrolled {
+            background: rgba(252,248,240,0.92);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.06);
+            padding:10px 0;
+        }
+        header .container { display:flex; align-items:center; justify-content:space-between; }
+        .logo { font-size:1.6rem; font-weight:800; letter-spacing:-0.03em; cursor:default; }
+        .logo span { color:var(--green-800); }
+        .nav-links { display:flex; align-items:center; gap:20px; list-style:none; }
+        .nav-links button {
+            background:none; border:none; font-weight:500; font-size:0.9rem;
+            color:var(--dark); cursor:pointer; transition:var(--transition);
+            font-family:inherit; padding:8px 16px; border-radius:60px;
+        }
+        .nav-links button:hover { background:var(--green-100); color:var(--green-600); }
+        .nav-cta {
+            background:var(--green-600) !important; color:#fff !important;
+            padding:8px 22px !important; border-radius:60px !important;
+            font-weight:600 !important;
+        }
+        .nav-cta:hover { background:var(--green-700) !important; color:#fff !important; }
+        .auth-buttons { display:flex; align-items:center; gap:12px; }
+        .auth-buttons .login-btn, .auth-buttons .signup-btn {
+            background:transparent !important; padding:8px 22px !important;
+            border-radius:60px !important; font-weight:600 !important;
+            font-size:0.9rem !important; cursor:pointer !important;
+            border:none !important; font-family:inherit !important;
+            transition:var(--transition) !important;
+        }
+        .auth-buttons .login-btn { color:var(--green-600) !important; box-shadow:inset 0 0 0 2px var(--green-600) !important; }
+        .auth-buttons .login-btn:hover { background:var(--green-600) !important; color:#fff !important; }
+        .auth-buttons .signup-btn { background:var(--green-600) !important; color:#fff !important; box-shadow:0 8px 24px rgba(46,139,87,0.30) !important; }
+        .auth-buttons .signup-btn:hover { background:var(--green-700) !important; }
+        .user-menu { position:relative; display:inline-block; }
+        .user-menu .user-avatar {
+            display:flex; align-items:center; gap:8px;
+            background:var(--green-100); padding:6px 16px 6px 12px;
+            border-radius:60px; cursor:pointer; border:2px solid var(--green-200);
+            transition:var(--transition);
+        }
+        .user-menu .user-avatar:hover { border-color:var(--green-600); }
+        .user-menu .user-avatar .avatar-icon { width:28px; height:28px; border-radius:50%; background:var(--green-600); color:#fff; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:600; }
+        .user-menu .user-avatar .user-name { font-weight:600; font-size:0.9rem; }
+        .user-menu .dropdown { display:none; position:absolute; right:0; top:48px; background:#fff; border-radius:var(--radius-sm); box-shadow:var(--shadow); min-width:200px; padding:8px 0; border:1px solid var(--green-200); z-index:100; }
+        .user-menu .dropdown.open { display:block; }
+        .user-menu .dropdown button { background:none; border:none; padding:10px 20px; width:100%; text-align:left; font-family:inherit; font-size:0.9rem; cursor:pointer; transition:var(--transition); color:var(--dark); }
+        .user-menu .dropdown button:hover { background:var(--green-100); color:var(--green-600); }
+        .user-menu .dropdown .divider { height:1px; background:var(--green-200); margin:4px 12px; }
+        .hamburger { display:none; flex-direction:column; gap:5px; background:none; border:none; padding:4px; cursor:pointer; }
+        .hamburger span { width:28px; height:3px; background:var(--dark); border-radius:4px; transition:var(--transition); }
+
+        .hero {
+            min-height:100vh; display:flex; align-items:center; position:relative;
+            background:linear-gradient(165deg, var(--cream) 0%, var(--green-100) 60%, var(--green-200) 100%);
+            overflow:hidden; padding-top:80px;
+        }
+        .hero::before { content:''; position:absolute; top:-30%; right:-20%; width:70%; height:120%; background:radial-gradient(ellipse, rgba(46,139,87,0.10) 0%, transparent 70%); pointer-events:none; }
+        .hero .container { display:grid; grid-template-columns:1fr; gap:40px; align-items:center; position:relative; z-index:2; text-align:center; justify-items:center; }
+        .hero-content h1 { font-size:clamp(3.4rem,8vw,5.8rem); font-weight:800; line-height:1.1; letter-spacing:-0.03em; margin-bottom:20px; }
+        .hero-content h1 .highlight { background:linear-gradient(135deg, var(--green-600), var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+        .hero-content p { font-size:1.3rem; color:#3d4f44; max-width:700px; margin:0 auto 32px; line-height:1.8; }
+        .hero-stats { display:flex; gap:50px; margin-top:40px; padding-top:32px; border-top:2px solid rgba(46,139,87,0.15); justify-content:center; }
+        .hero-stats .stat h3 { font-size:2rem; font-weight:800; color:var(--green-700); }
+        .hero-stats .stat p { font-size:0.85rem; color:#5a6e60; font-weight:500; }
+        .floating-leaf { position:absolute; font-size:2.6rem; opacity:0.15; animation:float 6s ease-in-out infinite; pointer-events:none; }
+        .floating-leaf:nth-child(2) { top:10%; right:5%; animation-delay:2s; font-size:3.2rem; }
+        .floating-leaf:nth-child(3) { bottom:15%; left:-8%; animation-delay:4s; font-size:2rem; }
+        @keyframes float { 0%,100%{transform:translateY(0) rotate(0deg);} 50%{transform:translateY(-20px) rotate(10deg);} }
+
+        .mode-toggle {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .mode-btn {
+            padding: 12px 28px;
+            border-radius: 60px;
+            border: 2px solid var(--green-600);
+            background: transparent;
+            color: var(--green-600);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            font-size: 0.95rem;
+        }
+        .mode-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(46,139,87,0.15);
+        }
+        .mode-btn.active {
+            background: var(--green-600);
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(46,139,87,0.30);
+        }
+        .mode-btn.active:hover {
+            background: var(--green-700);
+        }
+
+        .dashboard-grid {
+            display:grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+            gap:28px;
+            margin-top:20px;
+        }
+        .dash-card {
+            background:#fff;
+            padding:30px 16px;
+            border-radius:var(--radius);
+            box-shadow:var(--shadow-sm);
+            border:1px solid rgba(46,139,87,0.08);
+            transition:var(--transition);
+            text-align:center;
+            cursor:pointer;
+        }
+        .dash-card:hover {
+            transform:translateY(-8px);
+            box-shadow:var(--shadow);
+            border-color:var(--green-300);
+        }
+        .dash-card .icon {
+            font-size:2.8rem;
+            color:var(--green-600);
+            margin-bottom:10px;
+        }
+        .dash-card h3 {
+            font-size:1.1rem;
+            margin-bottom:4px;
+        }
+        .dash-card p {
+            font-size:0.85rem;
+            color:#5a6e60;
+        }
+        .dash-card.hidden {
+            display: none;
+        }
+
+        .auth-modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.50); backdrop-filter:blur(6px); z-index:5000; display:none; justify-content:center; align-items:center; animation:fadeIn 0.3s ease; }
+        .auth-modal.active { display:flex; }
+        .auth-modal .modal-box { background:#fff; border-radius:var(--radius); padding:40px 36px; max-width:420px; width:100%; box-shadow:0 40px 100px rgba(0,0,0,0.40); animation:slideUp 0.35s ease; position:relative; }
+        .auth-modal .modal-box .close-modal { position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.5rem; cursor:pointer; color:#5a6e60; transition:var(--transition); }
+        .auth-modal .modal-box .close-modal:hover { color:var(--dark); transform:rotate(90deg); }
+        .auth-modal .modal-box h2 { font-size:1.6rem; font-weight:700; margin-bottom:4px; text-align:center; }
+        .auth-modal .modal-box .sub { text-align:center; color:#5a6e60; font-size:0.9rem; margin-bottom:24px; }
+        .auth-modal .modal-box .form-group { margin-bottom:16px; }
+        .auth-modal .modal-box .form-group label { display:block; font-weight:600; font-size:0.85rem; margin-bottom:4px; color:var(--dark); }
+        .auth-modal .modal-box .form-group input { width:100%; padding:10px 14px; border:2px solid var(--green-200); border-radius:var(--radius-sm); font-size:1rem; font-family:inherit; transition:var(--transition); background:#fff; outline:none; }
+        .auth-modal .modal-box .form-group input:focus { border-color:var(--green-600); box-shadow:0 0 0 4px var(--green-100); }
+        .auth-modal .modal-box .btn { width:100%; margin-top:4px; }
+        .auth-modal .modal-box .switch-link { text-align:center; font-size:0.85rem; color:#5a6e60; margin-top:16px; }
+        .auth-modal .modal-box .switch-link a { color:var(--green-600); font-weight:600; cursor:pointer; }
+        .auth-modal .modal-box .switch-link a:hover { text-decoration:underline; }
+
+        .dashboard-modal { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.50); backdrop-filter:blur(6px); z-index:5001; display:none; justify-content:center; align-items:center; animation:fadeIn 0.3s ease; }
+        .dashboard-modal.active { display:flex; }
+        .dashboard-modal .modal-box { background:#fff; border-radius:var(--radius); padding:40px 36px; max-width:600px; width:100%; max-height:80vh; overflow-y:auto; box-shadow:0 40px 100px rgba(0,0,0,0.40); animation:slideUp 0.35s ease; position:relative; }
+        .dashboard-modal .modal-box .close-modal { position:sticky; top:0; float:right; background:none; border:none; font-size:1.5rem; cursor:pointer; color:#5a6e60; transition:var(--transition); }
+        .dashboard-modal .modal-box .close-modal:hover { color:var(--dark); transform:rotate(90deg); }
+        .dashboard-modal .modal-box h2 { font-size:1.6rem; font-weight:700; margin-bottom:4px; }
+        .dashboard-modal .modal-box .user-stats { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0 20px; }
+        .dashboard-modal .modal-box .user-stats .stat-card { background:var(--green-100); padding:16px; border-radius:var(--radius-sm); text-align:center; }
+        .dashboard-modal .modal-box .user-stats .stat-card .number { font-size:1.8rem; font-weight:800; color:var(--green-600); }
+        .dashboard-modal .modal-box .user-stats .stat-card .label { font-size:0.8rem; color:#5a6e60; }
+        .dashboard-modal .modal-box .booking-list { margin-top:12px; }
+        .dashboard-modal .modal-box .booking-list .booking-item { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--green-200); font-size:0.9rem; }
+        .dashboard-modal .modal-box .booking-list .booking-item:last-child { border:none; }
+        .dashboard-modal .modal-box .booking-list .booking-item .name { font-weight:600; }
+        .dashboard-modal .modal-box .booking-list .booking-item .date { color:#5a6e60; font-size:0.8rem; }
+        .dashboard-modal .modal-box .no-bookings { color:#5a6e60; text-align:center; padding:16px 0; }
+        .dashboard-modal .modal-box .refresh-btn { margin-top:12px; padding:6px 16px; font-size:0.8rem; background:var(--green-100); border:1px solid var(--green-200); border-radius:60px; cursor:pointer; transition:var(--transition); color:var(--green-600); font-family:inherit; }
+        .dashboard-modal .modal-box .refresh-btn:hover { background:var(--green-200); }
+
+        footer { background:var(--green-900); color:rgba(255,255,255,0.70); padding:48px 0 32px; }
+        footer .container { display:flex; flex-direction:column; align-items:center; gap:20px; text-align:center; }
+        footer .logo { color:#fff; }
+        footer .logo span { color:var(--green-400); }
+        footer .links { display:flex; gap:28px; flex-wrap:wrap; justify-content:center; }
+        footer .links button { background:none; border:none; color:rgba(255,255,255,0.70); font-size:0.9rem; cursor:pointer; transition:var(--transition); font-family:inherit; }
+        footer .links button:hover { color:var(--gold-light); }
+        footer .copy { font-size:0.8rem; opacity:0.5; }
+
+        .help-float-btn {
+            position:fixed;
+            bottom:30px;
+            right:30px;
+            z-index:3000;
+            width:64px;
+            height:64px;
+            border-radius:50%;
+            background:var(--green-600);
+            color:#fff;
+            border:none;
+            box-shadow:0 8px 32px rgba(46,139,87,0.45);
+            cursor:pointer;
+            transition:var(--transition);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:2rem;
+        }
+        .help-float-btn:hover {
+            transform:scale(1.08);
+            box-shadow:0 12px 40px rgba(46,139,87,0.55);
+            background:var(--green-700);
+        }
+
+        @keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
+        @keyframes slideUp { from{opacity:0;transform:translateY(40px);} to{opacity:1;transform:translateY(0);} }
+
+        @media (max-width:768px) {
+            .nav-links { display:none; flex-direction:column; position:absolute; top:72px; left:24px; right:24px; background:rgba(252,248,240,0.96); backdrop-filter:blur(20px); padding:24px; border-radius:var(--radius-sm); box-shadow:var(--shadow); gap:12px; align-items:stretch; text-align:center; }
+            .nav-links.open { display:flex; }
+            .hamburger { display:flex; }
+            .hero-stats { flex-direction:column; gap:16px; align-items:center; }
+            .hero-content h1 { font-size:clamp(2.6rem,10vw,3.8rem); }
+            .dashboard-grid { grid-template-columns:1fr 1fr; }
+            .auth-modal .modal-box, .dashboard-modal .modal-box { padding:30px 20px; margin:0 16px; }
+            .dashboard-modal .modal-box .user-stats { grid-template-columns:1fr; }
+            .mode-toggle { flex-direction:column; align-items:center; }
+            .mode-btn { width:100%; max-width:250px; text-align:center; }
+            .help-float-btn { bottom:20px; right:20px; width:56px; height:56px; font-size:1.6rem; }
+        }
+        @media (max-width:480px) {
+            .hero-content h1 { font-size:2.4rem; }
+            .dashboard-grid { grid-template-columns:1fr; }
+            .logo { font-size:1.2rem; }
+            .auth-buttons .login-btn, .auth-buttons .signup-btn { padding:6px 14px !important; font-size:0.8rem !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══ HEADER ═══ -->
+    <header id="header">
+        <div class="container">
+            <div class="logo">Vana<span>Darpan</span></div>
+            <ul class="nav-links" id="navLinks">
+                <li><button onclick="openWindow('compare')">📊 Compare</button></li>
+                <li><button onclick="openWindow('booking')">🎟️ Book Safari</button></li>
+                <li><button onclick="openWindow('route')">🗺️ Route</button></li>
+                <li><button onclick="openWindow('scores')">📊 Scores</button></li>
+                <li><button onclick="openWindow('features')">⚡ Features</button></li>
+                <li><button onclick="openWindow('problemsolution')">🧩 Problem</button></li>
+                <li><button onclick="openWindow('pledge')" class="nav-cta">🌱 Pledge</button></li>
+                <li>
+                    <div id="authContainer" class="auth-buttons">
+                        <button class="login-btn" onclick="openLoginModal()"><i class="fas fa-user"></i> Login</button>
+                        <button class="signup-btn" onclick="openSignupModal()">Sign Up</button>
+                    </div>
+                </li>
+            </ul>
+            <button class="hamburger" id="hamburger" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ═══ AUTH MODALS ═══ -->
+    <div class="auth-modal" id="loginModal"><div class="modal-box"><button class="close-modal" onclick="closeLoginModal()"><i class="fas fa-times"></i></button><h2>Welcome Back</h2><p class="sub">Sign in to access your VanaDarpan profile.</p><form id="loginForm" onsubmit="handleLogin(event)"><div class="form-group"><label for="loginEmail">Email Address</label><input type="email" id="loginEmail" placeholder="you@example.com" required /></div><div class="form-group"><label for="loginPassword">Password</label><input type="password" id="loginPassword" placeholder="••••••••" required /></div><button type="submit" class="btn btn-gold"><i class="fas fa-sign-in-alt"></i> Sign In</button></form><div class="switch-link">Don't have an account? <a onclick="closeLoginModal(); setTimeout(openSignupModal, 300);">Sign up</a></div></div></div>
+    <div class="auth-modal" id="signupModal"><div class="modal-box"><button class="close-modal" onclick="closeSignupModal()"><i class="fas fa-times"></i></button><h2>Create Account</h2><p class="sub">Join VanaDarpan and track your forest journeys.</p><form id="signupForm" onsubmit="handleSignup(event)"><div class="form-group"><label for="signupName">Full Name</label><input type="text" id="signupName" placeholder="Your Name" required /></div><div class="form-group"><label for="signupEmail">Email Address</label><input type="email" id="signupEmail" placeholder="you@example.com" required /></div><div class="form-group"><label for="signupPassword">Password</label><input type="password" id="signupPassword" placeholder="••••••••" required /></div><button type="submit" class="btn btn-gold"><i class="fas fa-user-plus"></i> Sign Up</button></form><div class="switch-link">Already have an account? <a onclick="closeSignupModal(); setTimeout(openLoginModal, 300);">Sign in</a></div></div></div>
+    <div class="dashboard-modal" id="dashboardModal"><div class="modal-box"><button class="close-modal" onclick="closeDashboardModal()"><i class="fas fa-times"></i></button><h2>👋 <span id="dashUserName">User</span>'s Dashboard</h2><div class="user-stats"><div class="stat-card"><div class="number" id="dashBookings">0</div><div class="label">Bookings Made</div></div><div class="stat-card"><div class="number" id="dashTime">0m</div><div class="label">Time Spent</div></div></div><div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;"><h4>📋 Your Booking History</h4><button class="refresh-btn" onclick="refreshDashboard()"><i class="fas fa-sync-alt"></i> Refresh</button></div><div class="booking-list" id="dashBookingList"><div class="no-bookings">No bookings yet. Start exploring sanctuaries!</div></div></div></div>
+
+    <!-- ═══ HERO ═══ -->
+    <section class="hero" id="home">
+        <div class="floating-leaf" style="top:12%;left:5%;">🌿</div>
+        <div class="floating-leaf" style="bottom:18%;right:8%;">🍃</div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="section-label" style="background:var(--green-600);color:#fff;">🌳 Forest Intelligence</div>
+                <h1>"Hariyali ka hisaab,<br /><span class="highlight">ab hoga khaas</span> –<br />VanaDarpan ke sath."</h1>
+                <p>Discover India's forest health at a glance. Find the best sanctuaries, get smart travel advice, and join the conservation movement — all in one place.</p>
+                <div class="hero-stats">
+                    <div class="stat"><h3>50+</h3><p>Sanctuaries Mapped</p></div>
+                    <div class="stat"><h3>24/7</h3><p>AI Assistant</p></div>
+                    <div class="stat"><h3>0–100</h3><p>Health Score</p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ DASHBOARD CARDS ═══ -->
+    <section style="padding:40px 0 80px; background:var(--cream);">
+        <div class="container">
+            <h2 style="text-align:center; font-size:2.2rem; font-weight:700; margin-bottom:8px;">
+                Explore <span style="color:var(--green-600);">VanaDarpan</span> Modules
+            </h2>
+            <p style="text-align:center; color:#4a5e50; max-width:500px; margin:0 auto 20px;">
+                <small style="color:#8a9e8a;">Click any card to open it in a new tab.</small>
+            </p>
+
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="touristBtn" onclick="switchMode('tourist')">🗺️ Tourists</button>
+                <button class="mode-btn" id="conserverBtn" onclick="switchMode('conserver')">🌿 Conservers</button>
+                <button class="mode-btn" id="studentBtn" onclick="switchMode('student')">🎓 Students</button>
+            </div>
+
+            <div class="dashboard-grid" id="dashboardGrid">
+                <!-- Tourist Cards -->
+                <div class="dash-card tourist-card" onclick="openWindow('compare')" style="border-color:var(--gold);">
+                    <div class="icon">📊</div><h3>Compare Sanctuaries</h3>
+                    <p>Side‑by‑side comparison of health scores &amp; travel details</p>
+                </div>
+                <div class="dash-card tourist-card" onclick="openWindow('booking')" style="border-color:var(--gold);">
+                    <div class="icon">🎟️</div><h3>Book a Safari</h3>
+                    <p>Plan your wildlife adventure – demo booking</p>
+                </div>
+                <div class="dash-card tourist-card" onclick="openWindow('route')" style="border-color:var(--gold);">
+                    <div class="icon">🗺️</div><h3>Route Planner</h3>
+                    <p>Plan your journey to any sanctuary with route suggestions</p>
+                </div>
+                <div class="dash-card tourist-card conserver-card student-card" onclick="openWindow('scores')">
+                    <div class="icon">📊</div><h3>Forest Health Scores</h3>
+                    <p>How we calculate the 0–100 health index</p>
+                </div>
+                <div class="dash-card tourist-card" onclick="openWindow('tips')" style="border-color:var(--gold-light);">
+                    <div class="icon">✈️</div><h3>Travel Tips</h3>
+                    <p>Best time to visit, what to carry, and more</p>
+                </div>
+
+                <!-- Conserver Cards -->
+                <div class="dash-card conserver-card" onclick="openWindow('problemsolution')">
+                    <div class="icon">🧩</div><h3>Problem &amp; Solution</h3>
+                    <p>Why we built this platform</p>
+                </div>
+                <div class="dash-card conserver-card" onclick="openWindow('pledge')" style="border-color:var(--gold);">
+                    <div class="icon">🌱</div><h3>Take a Pledge</h3>
+                    <p>Commit to conservation &amp; get inspired</p>
+                </div>
+                <div class="dash-card conserver-card" onclick="openWindow('impact')" style="border-color:var(--gold-light);">
+                    <div class="icon">🌍</div><h3>Conservation Impact</h3>
+                    <p>See the difference we are making together</p>
+                </div>
+                <div class="dash-card conserver-card" onclick="openWindow('endangered')" style="border-color:var(--gold-light);">
+                    <div class="icon">🦏</div><h3>Endangered Species</h3>
+                    <p>Track India's most threatened wildlife</p>
+                </div>
+
+                <!-- Student Cards -->
+                <div class="dash-card student-card" onclick="openWindow('learning')" style="border-color:var(--gold-light);">
+                    <div class="icon">📚</div><h3>Learning Modules</h3>
+                    <p>Educational content about forests &amp; biodiversity</p>
+                </div>
+                <div class="dash-card student-card" onclick="openWindow('quiz')" style="border-color:var(--gold); background:linear-gradient(145deg,#fff,#f0f7f0);">
+                    <div class="icon">🧠</div><h3>Take a Quiz</h3>
+                    <p>Test your knowledge about India's forests</p>
+                </div>
+                <div class="dash-card student-card" onclick="openWindow('research')" style="border-color:var(--gold-light);">
+                    <div class="icon">🔬</div><h3>Research Resources</h3>
+                    <p>Data, reports, and tools for school projects</p>
+                </div>
+                <div class="dash-card student-card" onclick="openWindow('features')" style="border-color:var(--gold-light);">
+                    <div class="icon">⚡</div><h3>Our Features</h3>
+                    <p>What makes VanaDarpan unique</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer>
+        <div class="container">
+            <a href="#" class="logo">Vana<span>Darpan</span></a>
+            <div class="links">
+                <button onclick="openWindow('compare')">📊 Compare</button>
+                <button onclick="openWindow('booking')">🎟️ Book Safari</button>
+                <button onclick="openWindow('route')">🗺️ Route</button>
+                <button onclick="openWindow('scores')">Scores</button>
+                <button onclick="openWindow('features')">Features</button>
+                <button onclick="openWindow('problemsolution')">Problem</button>
+                <button onclick="openWindow('pledge')">Pledge</button>
+                <button onclick="openWindow('endangered')" style="color:var(--gold-light);">🦏 Endangered</button>
+                <button onclick="openWindow('learning')" style="color:var(--gold-light);">📚 Learning</button>
+                <button onclick="openWindow('quiz')" style="color:var(--gold-light);">🧠 Quiz</button>
+            </div>
+            <div class="copy">&copy; 2026 VanaDarpan — Hariyali ka hisaab, ab hoga khaas.<br />Built with <i class="fas fa-heart" style="color:var(--gold);"></i> for India's forests.</div>
+        </div>
+    </footer>
+
+    <!-- ═══ HELP FLOATING BUTTON (VanaBot) ═══ -->
+    <button class="help-float-btn" onclick="window.open('https://www.chatbase.co/i4uAis-ZmMSXarwHjidxa/help', '_blank')" aria-label="Chatbot Help">
+        <i class="fas fa-robot"></i>
+    </button>
+
+    <!-- ═══ MAIN APPLICATION SCRIPTS ═══ -->
+    <script>
+        // ─── SANCTUARY DATA ───
+        const sanctuaryData = [
+            { name:'Kaziranga National Park', state:'Assam', score:94, wildlife:96, pollution:88, treeDensity:95, disturbance:91, season:'Nov–Apr', city:'Jorhat', safari:'Morning & Evening', bestFor:'One-horned rhino, elephants' },
+            { name:'Periyar Wildlife Sanctuary', state:'Kerala', score:92, wildlife:93, pollution:90, treeDensity:94, disturbance:89, season:'Oct–May', city:'Thekkady', safari:'Boat safari, morning jeep', bestFor:'Tigers, elephants, birds' },
+            { name:'Kanha National Park', state:'Madhya Pradesh', score:91, wildlife:92, pollution:87, treeDensity:93, disturbance:88, season:'Oct–Jun', city:'Jabalpur', safari:'Morning & evening jeep', bestFor:'Tigers, barasingha' },
+            { name:'Silent Valley National Park', state:'Kerala', score:90, wildlife:89, pollution:93, treeDensity:92, disturbance:86, season:'Dec–Apr', city:'Palakkad', safari:'Trekking only', bestFor:'Lion-tailed macaque, birds' },
+            { name:'Bandipur National Park', state:'Karnataka', score:89, wildlife:90, pollution:86, treeDensity:91, disturbance:87, season:'Oct–May', city:'Mysore', safari:'Morning & evening jeep', bestFor:'Tigers, elephants, deer' },
+            { name:'Ranthambore National Park', state:'Rajasthan', score:88, wildlife:89, pollution:84, treeDensity:88, disturbance:90, season:'Oct–Jun', city:'Sawai Madhopur', safari:'Morning & evening jeep', bestFor:'Tigers, leopards, birds' },
+            { name:'Jim Corbett National Park', state:'Uttarakhand', score:88, wildlife:90, pollution:85, treeDensity:89, disturbance:87, season:'Nov–Jun', city:'Ramnagar', safari:'Morning & evening jeep', bestFor:'Tigers, elephants, birds' },
+            { name:'Mudumalai National Park', state:'Tamil Nadu', score:87, wildlife:87, pollution:85, treeDensity:89, disturbance:86, season:'Nov–May', city:'Ooty', safari:'Morning jeep, elephant ride', bestFor:'Tigers, elephants, birds' },
+            { name:'Nagarhole National Park', state:'Karnataka', score:87, wildlife:88, pollution:84, treeDensity:90, disturbance:85, season:'Oct–May', city:'Mysore', safari:'Morning & evening jeep', bestFor:'Tigers, elephants, birds' },
+            { name:'Sundarbans National Park', state:'West Bengal', score:86, wildlife:85, pollution:83, treeDensity:88, disturbance:88, season:'Dec–Mar', city:'Kolkata', safari:'Boat safari', bestFor:'Royal Bengal tiger, crocodiles' },
+            { name:'Gir Forest National Park', state:'Gujarat', score:86, wildlife:87, pollution:82, treeDensity:87, disturbance:86, season:'Dec–May', city:'Junagadh', safari:'Morning & evening jeep', bestFor:'Asiatic lions' },
+            { name:'Tadoba Andhari Tiger Reserve', state:'Maharashtra', score:85, wildlife:86, pollution:82, treeDensity:87, disturbance:84, season:'Oct–Jun', city:'Chandrapur', safari:'Morning & evening jeep', bestFor:'Tigers, sloth bears' },
+            { name:'Dudhwa National Park', state:'Uttar Pradesh', score:82, wildlife:83, pollution:80, treeDensity:85, disturbance:80, season:'Nov–May', city:'Lakhimpur Kheri', safari:'Morning jeep, elephant ride', bestFor:'Tigers, rhinos, birds' },
+            { name:'Simlipal National Park', state:'Odisha', score:83, wildlife:84, pollution:80, treeDensity:86, disturbance:81, season:'Nov–Jun', city:'Baripada', safari:'Morning jeep', bestFor:'Tigers, elephants, birds' },
+            { name:'Anamalai Tiger Reserve', state:'Tamil Nadu', score:84, wildlife:85, pollution:82, treeDensity:87, disturbance:82, season:'Nov–May', city:'Coimbatore', safari:'Morning jeep', bestFor:'Tigers, elephants, birds' }
+        ];
+
+        const stateMap = { 'kerala':'Kerala','assam':'Assam','karnataka':'Karnataka','tamil nadu':'Tamil Nadu','maharashtra':'Maharashtra','madhya pradesh':'Madhya Pradesh','rajasthan':'Rajasthan','uttarakhand':'Uttarakhand','west bengal':'West Bengal','gujarat':'Gujarat','uttar pradesh':'Uttar Pradesh','odisha':'Odisha' };
+
+        const conservationTips = [
+            '🌿 Plant a tree! Every tree helps restore forest ecosystems.',
+            '♻️ Reduce plastic use — carry a reusable water bottle and bags.',
+            '🐘 Keep a safe distance from wildlife. Never feed animals.',
+            '🔦 Avoid loud noises and bright lights at night in forests.',
+            '🚮 Take your trash back with you — leave no trace.',
+            '📸 Respect local guidelines and maintain silence during safaris.',
+            '🌳 Support eco-tourism and stay in eco-friendly resorts.',
+            '🦜 Report any illegal activities like poaching or logging.'
+        ];
+
+        // ─── ROUTE DATA ─── (Comprehensive – covers all cities and sanctuaries)
+        const routeData = {
+            'Delhi': {
+                'Jim Corbett National Park': { distance: '260 km', time: '5–6 hrs', route: 'Delhi → Moradabad → Ramnagar → Corbett', road: 'Good (NH 9 & state highways)', tip: 'Leave early morning to reach by afternoon' },
+                'Ranthambore National Park': { distance: '380 km', time: '7–8 hrs', route: 'Delhi → Jaipur → Sawai Madhopur → Ranthambore', road: 'Excellent (NH 48 & NH 52)', tip: 'Stop at Jaipur for lunch and a quick city tour' },
+                'Kaziranga National Park': { distance: '1,800 km', time: '30–32 hrs', route: 'Delhi → Lucknow → Patna → Guwahati → Jorhat → Kaziranga', road: 'Good (NH 27 & NH 31)', tip: 'Break journey at Guwahati for overnight stay' },
+                'Periyar Wildlife Sanctuary': { distance: '2,500 km', time: '40+ hrs', route: 'Delhi → Bengaluru → Kochi → Thekkady', road: 'Good (NH 44 & NH 183)', tip: 'Fly to Kochi and then drive' },
+                'Silent Valley National Park': { distance: '2,400 km', time: '38 hrs', route: 'Delhi → Bengaluru → Palakkad → Silent Valley', road: 'Good', tip: 'Fly to Coimbatore and then drive' },
+                'Kanha National Park': { distance: '1,100 km', time: '18–20 hrs', route: 'Delhi → Jabalpur → Kanha', road: 'Good (NH 44 & NH 30)', tip: 'Stay at a resort near the park' },
+                'Bandipur National Park': { distance: '2,100 km', time: '35 hrs', route: 'Delhi → Bengaluru → Mysore → Bandipur', road: 'Good', tip: 'Fly to Bengaluru and drive from there' },
+                'Nagarhole National Park': { distance: '2,150 km', time: '36 hrs', route: 'Delhi → Bengaluru → Mysore → Nagarhole', road: 'Good', tip: 'Combine with Bandipur' },
+                'Sundarbans National Park': { distance: '1,500 km', time: '24 hrs', route: 'Delhi → Kolkata → Sundarbans', road: 'Good (NH 12)', tip: 'Take a boat safari' },
+                'Gir Forest National Park': { distance: '1,100 km', time: '18 hrs', route: 'Delhi → Ahmedabad → Junagadh → Gir', road: 'Good (NH 47)', tip: 'Visit the Interpretation Zone' },
+                'Tadoba Andhari Tiger Reserve': { distance: '1,100 km', time: '18 hrs', route: 'Delhi → Nagpur → Chandrapur → Tadoba', road: 'Good (NH 44)', tip: 'Book safari in advance' },
+                'Dudhwa National Park': { distance: '600 km', time: '10–12 hrs', route: 'Delhi → Lucknow → Lakhimpur Kheri → Dudhwa', road: 'Good (NH 30)', tip: 'Elephant safari recommended' },
+                'Simlipal National Park': { distance: '1,400 km', time: '22 hrs', route: 'Delhi → Kolkata → Baripada → Simlipal', road: 'Good (NH 18)', tip: 'Check for tribal village tours' },
+                'Mudumalai National Park': { distance: '2,000 km', time: '33 hrs', route: 'Delhi → Bengaluru → Ooty → Mudumalai', road: 'Good', tip: 'Scenic drive through Nilgiris' },
+                'Anamalai Tiger Reserve': { distance: '2,100 km', time: '35 hrs', route: 'Delhi → Bengaluru → Coimbatore → Pollachi → Anamalai', road: 'Good', tip: 'Check for forest entry permits' }
+            },
+            'Mumbai': {
+                'Tadoba Andhari Tiger Reserve': { distance: '850 km', time: '14–15 hrs', route: 'Mumbai → Nagpur → Chandrapur → Tadoba', road: 'Good (NH 44)', tip: 'Break journey at Nagpur for overnight stay' },
+                'Gir Forest National Park': { distance: '880 km', time: '15–16 hrs', route: 'Mumbai → Surat → Rajkot → Junagadh → Gir', road: 'Good (NH 48 & NH 27)', tip: 'Visit Somnath temple en route' },
+                'Kaziranga National Park': { distance: '2,400 km', time: '40 hrs', route: 'Mumbai → Nagpur → Raipur → Guwahati → Jorhat → Kaziranga', road: 'Good (NH 44 & NH 27)', tip: 'Fly to Guwahati and drive' },
+                'Periyar Wildlife Sanctuary': { distance: '1,400 km', time: '24 hrs', route: 'Mumbai → Bengaluru → Kochi → Thekkady', road: 'Good (NH 48 & NH 44)', tip: 'Fly to Kochi' },
+                'Silent Valley National Park': { distance: '1,300 km', time: '22 hrs', route: 'Mumbai → Bengaluru → Palakkad → Silent Valley', road: 'Good', tip: 'Fly to Coimbatore' },
+                'Kanha National Park': { distance: '1,100 km', time: '18 hrs', route: 'Mumbai → Nagpur → Jabalpur → Kanha', road: 'Good (NH 44)', tip: 'Stay at a resort' },
+                'Bandipur National Park': { distance: '1,000 km', time: '16–17 hrs', route: 'Mumbai → Bengaluru → Mysore → Bandipur', road: 'Good (NH 48 & NH 44)', tip: 'Fly to Bengaluru' },
+                'Nagarhole National Park': { distance: '1,050 km', time: '17 hrs', route: 'Mumbai → Bengaluru → Mysore → Nagarhole', road: 'Good', tip: 'Combine with Bandipur' },
+                'Sundarbans National Park': { distance: '2,000 km', time: '34 hrs', route: 'Mumbai → Kolkata → Sundarbans', road: 'Good (NH 12)', tip: 'Fly to Kolkata' },
+                'Jim Corbett National Park': { distance: '1,400 km', time: '24 hrs', route: 'Mumbai → Delhi → Moradabad → Corbett', road: 'Good', tip: 'Break at Delhi' },
+                'Ranthambore National Park': { distance: '1,200 km', time: '20 hrs', route: 'Mumbai → Jaipur → Sawai Madhopur → Ranthambore', road: 'Excellent', tip: 'Stop at Jaipur' },
+                'Dudhwa National Park': { distance: '1,500 km', time: '25 hrs', route: 'Mumbai → Lucknow → Lakhimpur Kheri → Dudhwa', road: 'Good', tip: 'Elephant safari' },
+                'Simlipal National Park': { distance: '1,600 km', time: '26 hrs', route: 'Mumbai → Kolkata → Baripada → Simlipal', road: 'Good', tip: 'Visit tribal villages' },
+                'Mudumalai National Park': { distance: '1,100 km', time: '18 hrs', route: 'Mumbai → Bengaluru → Ooty → Mudumalai', road: 'Good', tip: 'Scenic drive' },
+                'Anamalai Tiger Reserve': { distance: '1,200 km', time: '20 hrs', route: 'Mumbai → Bengaluru → Coimbatore → Pollachi → Anamalai', road: 'Good', tip: 'Check permits' }
+            },
+            'Bengaluru': {
+                'Bandipur National Park': { distance: '220 km', time: '4–5 hrs', route: 'Bengaluru → Mysore → Bandipur', road: 'Excellent (NH 275)', tip: 'Stop at Mysore for breakfast' },
+                'Nagarhole National Park': { distance: '220 km', time: '4–5 hrs', route: 'Bengaluru → Mysore → Nagarhole', road: 'Excellent (NH 275)', tip: 'Combine with Bandipur for a wildlife weekend' },
+                'Mudumalai National Park': { distance: '280 km', time: '5–6 hrs', route: 'Bengaluru → Mysore → Bandipur → Mudumalai', road: 'Good (NH 275)', tip: 'Stay at Masinagudi' },
+                'Anamalai Tiger Reserve': { distance: '380 km', time: '7–8 hrs', route: 'Bengaluru → Salem → Coimbatore → Pollachi → Anamalai', road: 'Good (NH 44 & NH 67)', tip: 'Check for permits' },
+                'Periyar Wildlife Sanctuary': { distance: '550 km', time: '10–11 hrs', route: 'Bengaluru → Salem → Coimbatore → Kochi → Thekkady', road: 'Good (NH 44 & NH 183)', tip: 'Stop at Thekkady town' },
+                'Silent Valley National Park': { distance: '450 km', time: '8–9 hrs', route: 'Bengaluru → Salem → Coimbatore → Palakkad → Silent Valley', road: 'Good', tip: 'Trekking only' },
+                'Kaziranga National Park': { distance: '2,400 km', time: '38 hrs', route: 'Bengaluru → Nagpur → Raipur → Guwahati → Jorhat → Kaziranga', road: 'Good (NH 44 & NH 27)', tip: 'Fly to Guwahati and drive' },
+                'Kanha National Park': { distance: '1,500 km', time: '24 hrs', route: 'Bengaluru → Nagpur → Jabalpur → Kanha', road: 'Good (NH 44)', tip: 'Stay at a resort' },
+                'Ranthambore National Park': { distance: '1,800 km', time: '28 hrs', route: 'Bengaluru → Hyderabad → Nagpur → Jaipur → Sawai Madhopur', road: 'Good', tip: 'Break at Hyderabad' },
+                'Jim Corbett National Park': { distance: '2,000 km', time: '32 hrs', route: 'Bengaluru → Delhi → Moradabad → Corbett', road: 'Good', tip: 'Fly to Delhi' },
+                'Sundarbans National Park': { distance: '2,200 km', time: '36 hrs', route: 'Bengaluru → Kolkata → Sundarbans', road: 'Good', tip: 'Fly to Kolkata' },
+                'Gir Forest National Park': { distance: '1,500 km', time: '24 hrs', route: 'Bengaluru → Mumbai → Ahmedabad → Junagadh → Gir', road: 'Good', tip: 'Fly to Ahmedabad' },
+                'Tadoba Andhari Tiger Reserve': { distance: '1,200 km', time: '18–20 hrs', route: 'Bengaluru → Hyderabad → Nagpur → Chandrapur → Tadoba', road: 'Good (NH 44)', tip: 'Break at Nagpur' },
+                'Dudhwa National Park': { distance: '1,800 km', time: '28 hrs', route: 'Bengaluru → Lucknow → Lakhimpur Kheri → Dudhwa', road: 'Good', tip: 'Elephant safari' },
+                'Simlipal National Park': { distance: '1,800 km', time: '28 hrs', route: 'Bengaluru → Kolkata → Baripada → Simlipal', road: 'Good', tip: 'Visit tribal villages' }
+            },
+            'Kolkata': {
+                'Sundarbans National Park': { distance: '110 km', time: '3–4 hrs', route: 'Kolkata → Basanti → Sundarbans', road: 'Good (NH 12 & local roads)', tip: 'Take a boat safari from Godkhali' },
+                'Kaziranga National Park': { distance: '750 km', time: '13–14 hrs', route: 'Kolkata → Guwahati → Jorhat → Kaziranga', road: 'Good (NH 27 & NH 31)', tip: 'Stay at a resort near the park entrance' },
+                'Periyar Wildlife Sanctuary': { distance: '2,500 km', time: '42 hrs', route: 'Kolkata → Bengaluru → Kochi → Thekkady', road: 'Good', tip: 'Fly to Kochi' },
+                'Silent Valley National Park': { distance: '2,300 km', time: '38 hrs', route: 'Kolkata → Bengaluru → Palakkad → Silent Valley', road: 'Good', tip: 'Fly to Coimbatore' },
+                'Kanha National Park': { distance: '1,200 km', time: '20 hrs', route: 'Kolkata → Nagpur → Jabalpur → Kanha', road: 'Good (NH 44)', tip: 'Stay at a resort' },
+                'Bandipur National Park': { distance: '2,000 km', time: '34 hrs', route: 'Kolkata → Bengaluru → Mysore → Bandipur', road: 'Good', tip: 'Fly to Bengaluru' },
+                'Nagarhole National Park': { distance: '2,050 km', time: '35 hrs', route: 'Kolkata → Bengaluru → Mysore → Nagarhole', road: 'Good', tip: 'Combine with Bandipur' },
+                'Gir Forest National Park': { distance: '1,900 km', time: '32 hrs', route: 'Kolkata → Mumbai → Ahmedabad → Junagadh → Gir', road: 'Good', tip: 'Fly to Ahmedabad' },
+                'Tadoba Andhari Tiger Reserve': { distance: '1,200 km', time: '20 hrs', route: 'Kolkata → Nagpur → Chandrapur → Tadoba', road: 'Good (NH 44)', tip: 'Book safari in advance' },
+                'Jim Corbett National Park': { distance: '1,600 km', time: '26 hrs', route: 'Kolkata → Delhi → Moradabad → Corbett', road: 'Good', tip: 'Break at Delhi' },
+                'Ranthambore National Park': { distance: '1,700 km', time: '28 hrs', route: 'Kolkata → Jaipur → Sawai Madhopur → Ranthambore', road: 'Good', tip: 'Stop at Jaipur' },
+                'Dudhwa National Park': { distance: '1,200 km', time: '20 hrs', route: 'Kolkata → Lucknow → Lakhimpur Kheri → Dudhwa', road: 'Good', tip: 'Elephant safari' },
+                'Simlipal National Park': { distance: '250 km', time: '5–6 hrs', route: 'Kolkata → Baripada → Simlipal', road: 'Good (NH 18)', tip: 'Visit tribal villages' },
+                'Mudumalai National Park': { distance: '2,100 km', time: '36 hrs', route: 'Kolkata → Bengaluru → Ooty → Mudumalai', road: 'Good', tip: 'Scenic drive' },
+                'Anamalai Tiger Reserve': { distance: '2,200 km', time: '38 hrs', route: 'Kolkata → Bengaluru → Coimbatore → Pollachi → Anamalai', road: 'Good', tip: 'Check permits' }
+            },
+            'Chennai': {
+                'Mudumalai National Park': { distance: '550 km', time: '10–11 hrs', route: 'Chennai → Salem → Coimbatore → Ooty → Mudumalai', road: 'Good (NH 44 & NH 67)', tip: 'Enjoy the scenic drive through Nilgiris' },
+                'Anamalai Tiger Reserve': { distance: '520 km', time: '9–10 hrs', route: 'Chennai → Salem → Coimbatore → Pollachi → Anamalai', road: 'Good (NH 44 & state highways)', tip: 'Check for forest entry permits in advance' },
+                'Bandipur National Park': { distance: '450 km', time: '8–9 hrs', route: 'Chennai → Bengaluru → Mysore → Bandipur', road: 'Good (NH 44 & NH 275)', tip: 'Fly to Bengaluru and drive' },
+                'Nagarhole National Park': { distance: '460 km', time: '8–9 hrs', route: 'Chennai → Bengaluru → Mysore → Nagarhole', road: 'Good', tip: 'Combine with Bandipur' },
+                'Periyar Wildlife Sanctuary': { distance: '600 km', time: '11–12 hrs', route: 'Chennai → Madurai → Kochi → Thekkady', road: 'Good (NH 44 & NH 183)', tip: 'Stop at Madurai for lunch' },
+                'Silent Valley National Park': { distance: '550 km', time: '10–11 hrs', route: 'Chennai → Coimbatore → Palakkad → Silent Valley', road: 'Good', tip: 'Trekking only' },
+                'Kaziranga National Park': { distance: '2,400 km', time: '40 hrs', route: 'Chennai → Kolkata → Guwahati → Jorhat → Kaziranga', road: 'Good', tip: 'Fly to Guwahati' },
+                'Kanha National Park': { distance: '1,500 km', time: '24 hrs', route: 'Chennai → Nagpur → Jabalpur → Kanha', road: 'Good (NH 44)', tip: 'Stay at a resort' },
+                'Ranthambore National Park': { distance: '1,900 km', time: '30 hrs', route: 'Chennai → Hyderabad → Nagpur → Jaipur → Sawai Madhopur', road: 'Good', tip: 'Break at Hyderabad' },
+                'Jim Corbett National Park': { distance: '2,200 km', time: '36 hrs', route: 'Chennai → Delhi → Moradabad → Corbett', road: 'Good', tip: 'Fly to Delhi' },
+                'Sundarbans National Park': { distance: '1,800 km', time: '30 hrs', route: 'Chennai → Kolkata → Sundarbans', road: 'Good', tip: 'Fly to Kolkata' },
+                'Gir Forest National Park': { distance: '1,800 km', time: '30 hrs', route: 'Chennai → Mumbai → Ahmedabad → Junagadh → Gir', road: 'Good', tip: 'Fly to Ahmedabad' },
+                'Tadoba Andhari Tiger Reserve': { distance: '1,100 km', time: '18 hrs', route: 'Chennai → Hyderabad → Nagpur → Chandrapur → Tadoba', road: 'Good (NH 44)', tip: 'Break at Nagpur' },
+                'Dudhwa National Park': { distance: '2,000 km', time: '34 hrs', route: 'Chennai → Lucknow → Lakhimpur Kheri → Dudhwa', road: 'Good', tip: 'Elephant safari' },
+                'Simlipal National Park': { distance: '1,500 km', time: '26 hrs', route: 'Chennai → Kolkata → Baripada → Simlipal', road: 'Good', tip: 'Visit tribal villages' }
+            },
+            'Hyderabad': {
+                'Nagarhole National Park': { distance: '580 km', time: '10–11 hrs', route: 'Hyderabad → Kurnool → Bengaluru → Mysore → Nagarhole', road: 'Good (NH 44 & NH 275)', tip: 'Break at Bengaluru for rest' },
+                'Tadoba Andhari Tiger Reserve': { distance: '450 km', time: '8–9 hrs', route: 'Hyderabad → Nagpur → Chandrapur → Tadoba', road: 'Good (NH 44)', tip: 'Visit the Tadoba lake for great wildlife viewing' },
+                'Kaziranga National Park': { distance: '1,200 km', time: '20 hrs', route: 'Hyderabad → Nagpur → Raipur → Guwahati → Jorhat → Kaziranga', road: 'Good (NH 44 & NH 27)', tip: 'Fly to Guwahati' },
+                'Bandipur National Park': { distance: '500 km', time: '9–10 hrs', route: 'Hyderabad → Kurnool → Bengaluru → Mysore → Bandipur', road: 'Good (NH 44 & NH 275)', tip: 'Stop at Bengaluru' },
+                'Periyar Wildlife Sanctuary': { distance: '900 km', time: '15–16 hrs', route: 'Hyderabad → Bengaluru → Kochi → Thekkady', road: 'Good', tip: 'Fly to Kochi' },
+                'Silent Valley National Park': { distance: '850 km', time: '14–15 hrs', route: 'Hyderabad → Bengaluru → Coimbatore → Palakkad → Silent Valley', road: 'Good', tip: 'Fly to Coimbatore' },
+                'Kanha National Park': { distance: '700 km', time: '12–14 hrs', route: 'Hyderabad → Nagpur → Jabalpur → Kanha', road: 'Good (NH 44)', tip: 'Stay at a resort' },
+                'Sundarbans National Park': { distance: '1,400 km', time: '24 hrs', route: 'Hyderabad → Kolkata → Sundarbans', road: 'Good', tip: 'Fly to Kolkata' },
+                'Gir Forest National Park': { distance: '1,000 km', time: '16–18 hrs', route: 'Hyderabad → Mumbai → Ahmedabad → Junagadh → Gir', road: 'Good', tip: 'Fly to Ahmedabad' },
+                'Jim Corbett National Park': { distance: '1,600 km', time: '26 hrs', route: 'Hyderabad → Delhi → Moradabad → Corbett', road: 'Good', tip: 'Fly to Delhi' },
+                'Ranthambore National Park': { distance: '1,400 km', time: '22 hrs', route: 'Hyderabad → Jaipur → Sawai Madhopur → Ranthambore', road: 'Good', tip: 'Break at Jaipur' },
+                'Dudhwa National Park': { distance: '1,400 km', time: '22 hrs', route: 'Hyderabad → Lucknow → Lakhimpur Kheri → Dudhwa', road: 'Good', tip: 'Elephant safari' },
+                'Simlipal National Park': { distance: '1,000 km', time: '16 hrs', route: 'Hyderabad → Kolkata → Baripada → Simlipal', road: 'Good', tip: 'Visit tribal villages' },
+                'Mudumalai National Park': { distance: '600 km', time: '10–11 hrs', route: 'Hyderabad → Bengaluru → Ooty → Mudumalai', road: 'Good', tip: 'Scenic drive' },
+                'Anamalai Tiger Reserve': { distance: '650 km', time: '11–12 hrs', route: 'Hyderabad → Bengaluru → Coimbatore → Pollachi → Anamalai', road: 'Good', tip: 'Check permits' }
+            },
+            'Jaipur': {
+                'Ranthambore National Park': { distance: '160 km', time: '3–4 hrs', route: 'Jaipur → Sawai Madhopur → Ranthambore', road: 'Excellent (NH 52)', tip: 'Book safari in advance, especially in peak season' },
+                'Kaziranga National Park': { distance: '2,000 km', time: '34 hrs', route: 'Jaipur → Delhi → Lucknow → Guwahati → Jorhat → Kaziranga', road: 'Good', tip: 'Fly to Guwahati' },
+                'Kanha National Park': { distance: '1,100 km', time: '18 hrs', route: 'Jaipur → Agra → Jabalpur → Kanha', road: 'Good (NH 44)', tip: 'Stay at a resort' },
+                'Jim Corbett National Park': { distance: '500 km', time: '9–10 hrs', route: 'Jaipur → Delhi → Moradabad → Corbett', road: 'Good', tip: 'Break at Delhi' },
+                'Gir Forest National Park': { distance: '700 km', time: '12 hrs', route: 'Jaipur → Ahmedabad → Junagadh → Gir', road: 'Good', tip: 'Visit the Interpretation Zone' },
+                'Bandipur National Park': { distance: '2,000 km', time: '34 hrs', route: 'Jaipur → Bengaluru → Mysore → Bandipur', road: 'Good', tip: 'Fly to Bengaluru' }
+            },
+            'Lucknow': {
+                'Dudhwa National Park': { distance: '160 km', time: '3–4 hrs', route: 'Lucknow → Lakhimpur Kheri → Dudhwa', road: 'Good (NH 30)', tip: 'Take an elephant safari for the best experience' },
+                'Kanha National Park': { distance: '380 km', time: '7–8 hrs', route: 'Lucknow → Jabalpur → Kanha', road: 'Good (NH 44)', tip: 'Stay at a resort within the buffer zone' },
+                'Kaziranga National Park': { distance: '1,400 km', time: '24 hrs', route: 'Lucknow → Guwahati → Jorhat → Kaziranga', road: 'Good (NH 27)', tip: 'Fly to Guwahati' },
+                'Jim Corbett National Park': { distance: '450 km', time: '8–9 hrs', route: 'Lucknow → Moradabad → Ramnagar → Corbett', road: 'Good (NH 30 & NH 9)', tip: 'Leave early morning' },
+                'Ranthambore National Park': { distance: '650 km', time: '11–12 hrs', route: 'Lucknow → Jaipur → Sawai Madhopur → Ranthambore', road: 'Good', tip: 'Break at Jaipur' },
+                'Bandipur National Park': { distance: '1,800 km', time: '30 hrs', route: 'Lucknow → Bengaluru → Mysore → Bandipur', road: 'Good', tip: 'Fly to Bengaluru' }
+            },
+            'Guwahati': {
+                'Kaziranga National Park': { distance: '190 km', time: '4–5 hrs', route: 'Guwahati → Jorhat → Kaziranga', road: 'Good (NH 27)', tip: 'Jeep safari is available only on certain routes' },
+                'Sundarbans National Park': { distance: '700 km', time: '12–14 hrs', route: 'Guwahati → Kolkata → Sundarbans', road: 'Good (NH 27 & NH 12)', tip: 'Take a boat safari' }
+            },
+            'Ahmedabad': {
+                'Gir Forest National Park': { distance: '330 km', time: '6–7 hrs', route: 'Ahmedabad → Rajkot → Junagadh → Gir', road: 'Good (NH 47 & NH 27)', tip: 'Visit the Gir Interpretation Zone for guaranteed sightings' },
+                'Ranthambore National Park': { distance: '700 km', time: '12 hrs', route: 'Ahmedabad → Jaipur → Sawai Madhopur → Ranthambore', road: 'Good (NH 48 & NH 52)', tip: 'Stop at Jaipur' },
+                'Kaziranga National Park': { distance: '2,400 km', time: '40 hrs', route: 'Ahmedabad → Delhi → Lucknow → Guwahati → Jorhat → Kaziranga', road: 'Good', tip: 'Fly to Guwahati' }
+            },
+            'Kochi': {
+                'Periyar Wildlife Sanctuary': { distance: '180 km', time: '4–5 hrs', route: 'Kochi → Kottayam → Kumily → Periyar', road: 'Good (NH 183)', tip: 'Take a boat safari on Periyar Lake' },
+                'Silent Valley National Park': { distance: '160 km', time: '3–4 hrs', route: 'Kochi → Palakkad → Silent Valley', road: 'Good (NH 544)', tip: 'Permits are required for trekking in Silent Valley' },
+                'Bandipur National Park': { distance: '400 km', time: '8–9 hrs', route: 'Kochi → Coimbatore → Mysore → Bandipur', road: 'Good (NH 544 & NH 275)', tip: 'Break at Coimbatore' },
+                'Mudumalai National Park': { distance: '350 km', time: '7–8 hrs', route: 'Kochi → Coimbatore → Ooty → Mudumalai', road: 'Good', tip: 'Scenic drive through Nilgiris' },
+                'Anamalai Tiger Reserve': { distance: '200 km', time: '4–5 hrs', route: 'Kochi → Coimbatore → Pollachi → Anamalai', road: 'Good (NH 544 & NH 67)', tip: 'Check for permits' }
+            },
+            'Mysore': {
+                'Bandipur National Park': { distance: '70 km', time: '1.5–2 hrs', route: 'Mysore → Bandipur', road: 'Excellent (NH 275)', tip: 'Early morning safari starts at 6 AM' },
+                'Nagarhole National Park': { distance: '90 km', time: '2 hrs', route: 'Mysore → Nagarhole', road: 'Good (NH 275)', tip: 'Combined safari with Bandipur is popular' },
+                'Mudumalai National Park': { distance: '110 km', time: '2.5–3 hrs', route: 'Mysore → Bandipur → Mudumalai', road: 'Good (NH 275)', tip: 'Stay at Masinagudi for budget options' },
+                'Periyar Wildlife Sanctuary': { distance: '400 km', time: '8–9 hrs', route: 'Mysore → Coimbatore → Kochi → Thekkady', road: 'Good', tip: 'Fly to Kochi' },
+                'Silent Valley National Park': { distance: '350 km', time: '7–8 hrs', route: 'Mysore → Coimbatore → Palakkad → Silent Valley', road: 'Good', tip: 'Trekking only' },
+                'Anamalai Tiger Reserve': { distance: '300 km', time: '6–7 hrs', route: 'Mysore → Coimbatore → Pollachi → Anamalai', road: 'Good (NH 275 & NH 67)', tip: 'Check permits' }
+            },
+            'Jorhat': {
+                'Kaziranga National Park': { distance: '80 km', time: '1.5–2 hrs', route: 'Jorhat → Kaziranga', road: 'Good (NH 27)', tip: 'Visit the Agoratoli or Kohora ranges' }
+            },
+            'Thekkady': {
+                'Periyar Wildlife Sanctuary': { distance: '5 km', time: '10 min', route: 'Thekkady → Periyar', road: 'Excellent', tip: 'Walkable distance from Thekkady town' }
+            },
+            'Jabalpur': {
+                'Kanha National Park': { distance: '160 km', time: '3–4 hrs', route: 'Jabalpur → Mandla → Kanha', road: 'Good (NH 30)', tip: 'Visit the Kanha Museum for tribal and wildlife exhibits' }
+            },
+            'Palakkad': {
+                'Silent Valley National Park': { distance: '40 km', time: '1 hr', route: 'Palakkad → Silent Valley', road: 'Good (state highway)', tip: 'Trekking is the only way to explore the core area' }
+            },
+            'Ooty': {
+                'Mudumalai National Park': { distance: '40 km', time: '1 hr', route: 'Ooty → Mudumalai', road: 'Scenic (SH 15)', tip: 'The drive itself is beautiful, stop at viewpoints' },
+                'Anamalai Tiger Reserve': { distance: '110 km', time: '2.5–3 hrs', route: 'Ooty → Coimbatore → Pollachi → Anamalai', road: 'Good (NH 67)', tip: 'Check for night stay options inside the reserve' },
+                'Bandipur National Park': { distance: '50 km', time: '1.5 hrs', route: 'Ooty → Bandipur', road: 'Good (NH 275)', tip: 'Combine with Mudumalai' }
+            },
+            'Coimbatore': {
+                'Anamalai Tiger Reserve': { distance: '60 km', time: '1.5–2 hrs', route: 'Coimbatore → Pollachi → Anamalai', road: 'Good (NH 67)', tip: 'Take a forest department guide for the best experience' },
+                'Mudumalai National Park': { distance: '100 km', time: '2.5–3 hrs', route: 'Coimbatore → Ooty → Mudumalai', road: 'Scenic (NH 67 & SH 15)', tip: 'Enjoy the beautiful drive' },
+                'Silent Valley National Park': { distance: '90 km', time: '2–2.5 hrs', route: 'Coimbatore → Palakkad → Silent Valley', road: 'Good (NH 544)', tip: 'Trekking only' },
+                'Periyar Wildlife Sanctuary': { distance: '200 km', time: '4–5 hrs', route: 'Coimbatore → Kochi → Thekkady', road: 'Good (NH 544 & NH 183)', tip: 'Boat safari recommended' }
+            },
+            'Chandrapur': {
+                'Tadoba Andhari Tiger Reserve': { distance: '45 km', time: '1–1.5 hrs', route: 'Chandrapur → Tadoba', road: 'Good (state highway)', tip: 'Book safari online in advance' }
+            },
+            'Ramnagar': {
+                'Jim Corbett National Park': { distance: '10 km', time: '20 min', route: 'Ramnagar → Corbett', road: 'Excellent', tip: 'Visit the Corbett Museum' }
+            },
+            'Sawai Madhopur': {
+                'Ranthambore National Park': { distance: '12 km', time: '20 min', route: 'Sawai Madhopur → Ranthambore', road: 'Excellent', tip: 'Book safari at the Ranthambore gate' }
+            },
+            'Junagadh': {
+                'Gir Forest National Park': { distance: '60 km', time: '1.5 hrs', route: 'Junagadh → Gir', road: 'Good (state highway)', tip: 'Visit the Gir Interpretation Zone' }
+            },
+            'Lakhimpur Kheri': {
+                'Dudhwa National Park': { distance: '30 km', time: '45 min', route: 'Lakhimpur Kheri → Dudhwa', road: 'Good (state highway)', tip: 'Elephant safari recommended' }
+            },
+            'Baripada': {
+                'Simlipal National Park': { distance: '60 km', time: '1.5 hrs', route: 'Baripada → Simlipal', road: 'Good (NH 18)', tip: 'Visit tribal villages' }
+            },
+            'Nagpur': {
+                'Tadoba Andhari Tiger Reserve': { distance: '140 km', time: '3–4 hrs', route: 'Nagpur → Chandrapur → Tadoba', road: 'Good (NH 44 & state highways)', tip: 'Break at Chandrapur' },
+                'Kanha National Park': { distance: '260 km', time: '5–6 hrs', route: 'Nagpur → Jabalpur → Kanha', road: 'Good (NH 44)', tip: 'Stay at a resort' }
+            }
+        };
+
+        // ─── QUIZ DATA ───
+        const quizQuestions = [
+            { question: "What is the highest forest health score in India?", options: ["92/100", "94/100", "96/100", "90/100"], correct: 1, explanation: "Kaziranga National Park in Assam has the highest Forest Health Score of 94/100!" },
+            { question: "Which state has the highest number of tiger reserves?", options: ["Kerala", "Madhya Pradesh", "Assam", "Karnataka"], correct: 1, explanation: "Madhya Pradesh is known as the 'Tiger State' with the highest number of tiger reserves in India." },
+            { question: "What is the main threat to the Great Indian Bustard?", options: ["Poaching", "Power lines", "Habitat loss", "All of the above"], correct: 3, explanation: "The Great Indian Bustard faces multiple threats including power lines, poaching, and habitat loss." },
+            { question: "Which sanctuary is best known for the One-horned Rhinoceros?", options: ["Periyar", "Kanha", "Kaziranga", "Ranthambore"], correct: 2, explanation: "Kaziranga National Park in Assam is home to the largest population of the One-horned Rhinoceros." },
+            { question: "What percentage of India's land area is covered by forests?", options: ["~21%", "~31%", "~41%", "~51%"], correct: 0, explanation: "According to the India State of Forest Report, about 21.7% of India's geographical area is covered by forests." },
+            { question: "Which is the largest mangrove forest in the world?", options: ["Sundarbans", "Amazon Rainforest", "Congo Basin", "Daintree Rainforest"], correct: 0, explanation: "The Sundarbans in India and Bangladesh is the world's largest mangrove forest ecosystem." },
+            { question: "What is the main purpose of Forest Health Score?", options: ["Tourism promotion", "Measuring forest health", "Counting animals", "Tracking weather"], correct: 1, explanation: "The Forest Health Score measures the overall health of a forest based on wildlife, pollution, tree density, and human disturbance." },
+            { question: "Which state has the Periyar Wildlife Sanctuary?", options: ["Tamil Nadu", "Karnataka", "Kerala", "Assam"], correct: 2, explanation: "Periyar Wildlife Sanctuary is located in Kerala and is known for its scenic lake and tiger population." },
+            { question: "What is the best season to visit most Indian sanctuaries?", options: ["Monsoon", "Summer", "Winter", "October to June"], correct: 3, explanation: "Most Indian sanctuaries are best visited between October and June when the weather is pleasant and wildlife sightings are frequent." },
+            { question: "Which conservation success story is related to the Snow Leopard?", options: ["Project Tiger", "Project Snow Leopard", "Project Elephant", "Project Rhino"], correct: 1, explanation: "Project Snow Leopard was launched to protect the endangered snow leopard and its habitat in India." }
+        ];
+
+        // ─── MODE SWITCHING ───
+        function switchMode(mode) {
+            const touristCards = document.querySelectorAll('.tourist-card');
+            const conserverCards = document.querySelectorAll('.conserver-card');
+            const studentCards = document.querySelectorAll('.student-card');
+            const touristBtn = document.getElementById('touristBtn');
+            const conserverBtn = document.getElementById('conserverBtn');
+            const studentBtn = document.getElementById('studentBtn');
+
+            touristCards.forEach(card => card.classList.add('hidden'));
+            conserverCards.forEach(card => card.classList.add('hidden'));
+            studentCards.forEach(card => card.classList.add('hidden'));
+            touristBtn.classList.remove('active');
+            conserverBtn.classList.remove('active');
+            studentBtn.classList.remove('active');
+
+            if (mode === 'tourist') { touristCards.forEach(card => card.classList.remove('hidden')); touristBtn.classList.add('active'); }
+            else if (mode === 'conserver') { conserverCards.forEach(card => card.classList.remove('hidden')); conserverBtn.classList.add('active'); }
+            else if (mode === 'student') { studentCards.forEach(card => card.classList.remove('hidden')); studentBtn.classList.add('active'); }
+        }
+
+        // ─── USER MANAGEMENT ───
+        let currentUser = null, sessionStart = null;
+        function getUsers() { return JSON.parse(localStorage.getItem('vanadarpan_users')) || {}; }
+        function saveUsers(users) { localStorage.setItem('vanadarpan_users', JSON.stringify(users)); }
+        function getCurrentUser() {
+            const email = localStorage.getItem('vanadarpan_current_user');
+            if (!email) return null;
+            const users = getUsers();
+            return users[email] || null;
+        }
+        function setCurrentUser(email) { localStorage.setItem('vanadarpan_current_user', email); }
+        function clearCurrentUser() { localStorage.removeItem('vanadarpan_current_user'); }
+
+        function updateUserBookings(email, booking) {
+            const users = getUsers();
+            if (users[email]) {
+                if (!users[email].bookings) users[email].bookings = [];
+                users[email].bookings.push(booking);
+                saveUsers(users);
+                if (document.getElementById('dashboardModal').classList.contains('active')) refreshDashboard();
+            }
+        }
+
+        function updateUserTime(email) {
+            const users = getUsers();
+            if (users[email]) {
+                const elapsed = Math.floor((Date.now() - sessionStart) / 1000);
+                users[email].totalTime = (users[email].totalTime || 0) + elapsed;
+                saveUsers(users);
+            }
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const hrs = Math.floor(mins / 60);
+            if (hrs > 0) return `${hrs}h ${mins % 60}m`;
+            return `${mins}m`;
+        }
+
+        function refreshDashboard() {
+            const user = getCurrentUser();
+            if (!user) return;
+            document.getElementById('dashUserName').textContent = user.name || 'User';
+            const bookings = user.bookings || [];
+            document.getElementById('dashBookings').textContent = bookings.length;
+            document.getElementById('dashTime').textContent = formatTime(user.totalTime || 0);
+            const list = document.getElementById('dashBookingList');
+            if (bookings.length === 0) {
+                list.innerHTML = '<div class="no-bookings">No bookings yet. Start exploring sanctuaries!</div>';
+            } else {
+                list.innerHTML = bookings.map(b => `
+                    <div class="booking-item">
+                        <span class="name">${b.sanctuary}</span>
+                        <span class="date">${b.date} · ${b.adults} adults, ${b.children} children</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // ─── AUTH ───
+        function openLoginModal() { document.getElementById('loginModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeLoginModal() { document.getElementById('loginModal').classList.remove('active'); document.body.style.overflow = ''; }
+        function openSignupModal() { document.getElementById('signupModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeSignupModal() { document.getElementById('signupModal').classList.remove('active'); document.body.style.overflow = ''; }
+        function openDashboardModal() { refreshDashboard(); document.getElementById('dashboardModal').classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeDashboardModal() { document.getElementById('dashboardModal').classList.remove('active'); document.body.style.overflow = ''; }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const users = getUsers();
+            if (users[email] && users[email].password === password) {
+                setCurrentUser(email);
+                currentUser = users[email];
+                sessionStart = Date.now();
+                closeLoginModal();
+                updateUIForLoggedIn();
+                alert(`✅ Welcome back, ${users[email].name}!`);
+                setTimeout(openDashboardModal, 400);
+            } else {
+                if (users[email]) { alert('❌ Incorrect password. Please try again.'); }
+                else {
+                    if (confirm('⚠️ Account not found. Would you like to sign up instead?')) {
+                        closeLoginModal();
+                        setTimeout(openSignupModal, 300);
+                    }
+                }
+            }
+            document.getElementById('loginForm').reset();
+        }
+
+        function handleSignup(e) {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value.trim();
+            const users = getUsers();
+            if (users[email]) { alert('❌ An account with this email already exists.'); return; }
+            users[email] = { name, email, password, bookings: [], totalTime: 0 };
+            saveUsers(users);
+            setCurrentUser(email);
+            currentUser = users[email];
+            sessionStart = Date.now();
+            closeSignupModal();
+            updateUIForLoggedIn();
+            alert(`🎉 Welcome, ${name}! Your account has been created.`);
+            setTimeout(openDashboardModal, 400);
+            document.getElementById('signupForm').reset();
+        }
+
+        function logout() {
+            if (currentUser && sessionStart) updateUserTime(currentUser.email);
+            clearCurrentUser();
+            currentUser = null; sessionStart = null;
+            updateUIForLoggedIn();
+            closeDashboardModal();
+            alert('👋 You have been logged out.');
+        }
+
+        function updateUIForLoggedIn() {
+            const container = document.getElementById('authContainer');
+            const user = getCurrentUser();
+            if (user) {
+                container.innerHTML = `
+                    <div class="user-menu">
+                        <div class="user-avatar" onclick="toggleUserMenu()">
+                            <span class="avatar-icon">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</span>
+                            <span class="user-name">${user.name || 'User'}</span>
+                            <i class="fas fa-chevron-down" style="font-size:0.7rem;opacity:0.6;"></i>
+                        </div>
+                        <div class="dropdown" id="userDropdown">
+                            <button onclick="openDashboardModal(); toggleUserMenu();"><i class="fas fa-user-circle"></i> My Dashboard</button>
+                            <div class="divider"></div>
+                            <button onclick="logout(); toggleUserMenu();"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <button class="login-btn" onclick="openLoginModal()"><i class="fas fa-user"></i> Login</button>
+                    <button class="signup-btn" onclick="openSignupModal()">Sign Up</button>
+                `;
+            }
+        }
+
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('userDropdown');
+            if (dropdown) dropdown.classList.toggle('open');
+        }
+        document.addEventListener('click', function(e) {
+            const menu = document.querySelector('.user-menu');
+            if (menu && !menu.contains(e.target)) {
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown) dropdown.classList.remove('open');
+            }
+        });
+
+        // ─── HELPERS ───
+        function getBestSanctuary(state) {
+            const normalized = state.toLowerCase().trim();
+            let match = null;
+            for (const [key, val] of Object.entries(stateMap)) {
+                if (normalized.includes(key) || key.includes(normalized) || normalized === val.toLowerCase()) { match = val; break; }
+            }
+            if (!match) {
+                const all = Object.values(stateMap);
+                const suggestion = all.find(s => s.toLowerCase().includes(normalized) || normalized.includes(s.toLowerCase()));
+                if (suggestion) match = suggestion;
+            }
+            if (!match) return null;
+            const filtered = sanctuaryData.filter(s => s.state === match);
+            if (filtered.length === 0) return null;
+            return filtered.reduce((a,b) => a.score > b.score ? a : b);
+        }
+
+        function getRandomTip() { return conservationTips[Math.floor(Math.random() * conservationTips.length)]; }
+
+        function getWeatherAdvisory(state) {
+            const advisories = {
+                'Kerala': 'Monsoon season (Jun–Sep) brings heavy rains. Carry rain gear.',
+                'Assam': 'Heavy rainfall during monsoon. Best visited Oct–Apr.',
+                'Karnataka': 'Pleasant weather most of the year. Summer (Mar–May) can be hot.',
+                'Tamil Nadu': 'Tropical climate. Monsoon from Oct–Dec. Best visited Nov–Feb.',
+                'Maharashtra': 'Hot summers. Monsoon from Jun–Sep. Winter is pleasant.',
+                'Madhya Pradesh': 'Extreme summers. Winter (Nov–Feb) is the best time.',
+                'Rajasthan': 'Very hot in summer. Winter is pleasant (Oct–Mar).',
+                'Uttarakhand': 'Cold winters. Summer (Apr–Jun) is pleasant. Monsoon from Jul–Sep.',
+                'West Bengal': 'Humid climate. Monsoon from Jun–Sep. Best in winter.',
+                'Gujarat': 'Hot and dry. Winter (Oct–Mar) is the best time to visit.',
+                'Uttar Pradesh': 'Extreme climate. Winter (Nov–Feb) is pleasant.',
+                'Odisha': 'Hot and humid. Monsoon from Jun–Sep. Winter is best.'
+            };
+            for (const [key, val] of Object.entries(advisories)) {
+                if (state && state.includes(key)) return val;
+            }
+            return 'Check local weather before your trip. Carry appropriate clothing and gear.';
+        }
+
+        // ─── QUIZ FUNCTIONS ───
+        let quizState = { questions: [], currentQ: 0, score: 0, answered: false };
+
+        function initQuiz() {
+            quizState.questions = [...quizQuestions];
+            quizState.currentQ = 0;
+            quizState.score = 0;
+            quizState.answered = false;
+        }
+
+        function startQuiz() {
+            initQuiz();
+            document.getElementById('quizStartScreen').style.display = 'none';
+            document.getElementById('quizQuestionScreen').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = quizState.questions[quizState.currentQ];
+            document.getElementById('qNum').textContent = quizState.currentQ + 1;
+            document.getElementById('qScore').textContent = 'Score: ' + quizState.score;
+            document.getElementById('qProgress').style.width = ((quizState.currentQ + 1) / quizState.questions.length * 100) + '%';
+            document.getElementById('qText').textContent = q.question;
+            document.getElementById('qExplanation').style.display = 'none';
+            document.getElementById('qNextBtn').style.display = 'none';
+            quizState.answered = false;
+            const container = document.getElementById('qOptions');
+            container.innerHTML = '';
+            const letters = ['A', 'B', 'C', 'D'];
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-option';
+                btn.innerHTML = '<span style="font-weight:700;color:#2e8b57;margin-right:8px;">' + letters[idx] + '.</span> ' + opt;
+                btn.style.cssText = 'padding:12px 16px;border:2px solid #c8eed8;border-radius:12px;background:#fff;cursor:pointer;text-align:left;transition:0.3s;font-family:inherit;font-size:1rem;width:100%;';
+                btn.onmouseover = function() { if (!quizState.answered) this.style.borderColor = '#2e8b57'; };
+                btn.onmouseout = function() { if (!quizState.answered) this.style.borderColor = '#c8eed8'; };
+                btn.onclick = function() { selectAnswer(idx); };
+                container.appendChild(btn);
+            });
+            document.getElementById('qOptions').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function selectAnswer(idx) {
+            if (quizState.answered) return;
+            quizState.answered = true;
+            const q = quizState.questions[quizState.currentQ];
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach((btn, i) => {
+                btn.style.cursor = 'default';
+                btn.onmouseover = null;
+                btn.onmouseout = null;
+                if (i === q.correct) {
+                    btn.style.borderColor = '#2e8b57';
+                    btn.style.background = '#e8f9ef';
+                    btn.style.boxShadow = 'inset 0 0 0 2px #2e8b57';
+                } else if (i === idx && idx !== q.correct) {
+                    btn.style.borderColor = '#e74c3c';
+                    btn.style.background = '#fde8e8';
+                    btn.style.boxShadow = 'inset 0 0 0 2px #e74c3c';
+                }
+                if (i === idx && idx === q.correct) {
+                    quizState.score++;
+                    document.getElementById('qScore').textContent = 'Score: ' + quizState.score;
+                }
+            });
+            const expl = document.getElementById('qExplanation');
+            expl.style.display = 'block';
+            expl.innerHTML = '<strong>' + (idx === q.correct ? '✅ Correct! ' : '❌ Incorrect. ') + '</strong>' + q.explanation;
+            expl.style.background = idx === q.correct ? '#e8f9ef' : '#fde8e8';
+            expl.style.borderLeftColor = idx === q.correct ? '#2e8b57' : '#e74c3c';
+            const nextBtn = document.getElementById('qNextBtn');
+            if (quizState.currentQ < quizState.questions.length - 1) {
+                nextBtn.style.display = 'block';
+                nextBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Next Question';
+            } else {
+                nextBtn.style.display = 'block';
+                nextBtn.innerHTML = '📊 See Results';
+            }
+        }
+
+        function nextQuestion() {
+            quizState.currentQ++;
+            if (quizState.currentQ < quizState.questions.length) { showQuestion(); }
+            else { showResults(); }
+        }
+
+        function showResults() {
+            document.getElementById('quizQuestionScreen').style.display = 'none';
+            document.getElementById('quizResultScreen').style.display = 'block';
+            const percent = Math.round((quizState.score / quizState.questions.length) * 100);
+            document.getElementById('resultScore').textContent = quizState.score;
+            document.getElementById('resultPercent').textContent = percent + '%';
+            document.getElementById('resultBar').style.width = percent + '%';
+            let emoji, title, message;
+            if (percent === 100) { emoji = '🏆'; title = 'Perfect Score!'; message = 'You\'re a true forest expert! 🌿 Keep learning and sharing your knowledge!'; }
+            else if (percent >= 80) { emoji = '🌟'; title = 'Excellent!'; message = 'You have great knowledge about India\'s forests!'; }
+            else if (percent >= 60) { emoji = '📚'; title = 'Good Job!'; message = 'You know a lot about forests. Keep exploring and learning more!'; }
+            else if (percent >= 40) { emoji = '🌱'; title = 'Not Bad!'; message = 'You\'re on the right track. Review the learning modules to improve your score!'; }
+            else { emoji = '🧠'; title = 'Keep Learning!'; message = 'Don\'t worry! Visit the Learning Modules section and try the quiz again.'; }
+            document.getElementById('resultEmoji').textContent = emoji;
+            document.getElementById('resultTitle').textContent = title;
+            document.getElementById('resultMessage').textContent = message;
+        }
+
+        function retryQuiz() {
+            document.getElementById('quizResultScreen').style.display = 'none';
+            document.getElementById('quizStartScreen').style.display = 'block';
+        }
+
+        // ─── OPEN NEW WINDOW ───
+        function openWindow(type) {
+            const win = window.open('', '_blank');
+            if (!win || win.closed || typeof win.closed === 'undefined') {
+                alert('⚠️ Pop-up blocked! Please allow pop-ups for this site.');
+                return;
+            }
+            let bodyHTML = '';
+            let extraScript = '';
+
+            if (type === 'compare') {
+                const options = sanctuaryData.map(s => `<option value="${s.name}">${s.name} (${s.state})</option>`).join('');
+                bodyHTML = `<div class="text-center"><span class="section-label" style="background:#f0d68a;color:#0f2b1a;">📊 Compare</span><h2 class="section-title">Compare <span>Sanctuaries</span></h2><p style="color:#4a5e50;max-width:500px;margin:0 auto 20px;">Select up to 3 sanctuaries to compare.</p></div><div class="compare-selectors"><select id="compareSelect1"><option value="">-- Select 1st --</option>${options}</select><select id="compareSelect2"><option value="">-- Select 2nd --</option>${options}</select><select id="compareSelect3"><option value="">-- Select 3rd (optional) --</option>${options}</select></div><div id="compareResult"><div class="no-compare-msg">Please select at least 2 sanctuaries.</div></div>`;
+                extraScript = `const sanctuaryData=${JSON.stringify(sanctuaryData)};function updateCompare(){const s1=document.getElementById('compareSelect1'),s2=document.getElementById('compareSelect2'),s3=document.getElementById('compareSelect3'),resultDiv=document.getElementById('compareResult'),names=[s1.value,s2.value,s3.value].filter(n=>n);if(names.length<2){resultDiv.innerHTML='<div class="no-compare-msg">Please select at least 2 sanctuaries.</div>';return;}const sanctuaries=names.map(n=>sanctuaryData.find(s=>s.name===n)).filter(s=>s);if(sanctuaries.length<2){resultDiv.innerHTML='<div class="no-compare-msg">Please select valid sanctuaries.</div>';return;}const bestScore=Math.max(...sanctuaries.map(s=>s.score)),bestWildlife=Math.max(...sanctuaries.map(s=>s.wildlife)),bestPollution=Math.max(...sanctuaries.map(s=>s.pollution)),bestTree=Math.max(...sanctuaries.map(s=>s.treeDensity)),bestDisturbance=Math.max(...sanctuaries.map(s=>s.disturbance));let html='<div class="compare-table-wrap"><table class="compare-table"><thead><tr><th>Metric</th>';sanctuaries.forEach(s=>{html+='<th>'+s.name+'</th>';});html+='</tr></thead><tbody>';const rows=[{label:'📍 State',key:'state',best:false},{label:'📊 Health Score',key:'score',best:true,bestVal:bestScore},{label:'🐾 Wildlife',key:'wildlife',best:true,bestVal:bestWildlife},{label:'🌬️ Pollution',key:'pollution',best:true,bestVal:bestPollution},{label:'🌲 Tree Density',key:'treeDensity',best:true,bestVal:bestTree},{label:'👥 Disturbance',key:'disturbance',best:true,bestVal:bestDisturbance},{label:'📅 Best Season',key:'season',best:false},{label:'📍 Nearby City',key:'city',best:false},{label:'🚙 Safari',key:'safari',best:false},{label:'🌟 Best For',key:'bestFor',best:false}];rows.forEach(row=>{html+='<tr><th>'+row.label+'</th>';sanctuaries.forEach(s=>{let val=s[row.key];let isBest=false;if(row.best&&typeof val==='number'){isBest=val===row.bestVal;}let cellClass=isBest?'highlight-best':'';if(row.key==='score'){const color=val>=80?'#2e8b57':val>=60?'#d4a54a':'#e74c3c';html+='<td class="'+cellClass+' score-cell"><span style="color:'+color+';">'+val+'</span></td>';}else{html+='<td class="'+cellClass+'">'+val+'</td>';}});html+='</tr>';});html+='</tbody></table></div><div style="margin-top:12px;font-size:0.8rem;color:#5a6e60;"><span style="background:rgba(46,139,87,0.12);padding:2px 10px;border-radius:4px;border-left:3px solid #2e8b57;">Highlighted = Best in category</span></div>';resultDiv.innerHTML=html;}document.getElementById('compareSelect1').addEventListener('change',updateCompare);document.getElementById('compareSelect2').addEventListener('change',updateCompare);document.getElementById('compareSelect3').addEventListener('change',updateCompare);setTimeout(updateCompare,100);`;
+            } else if (type === 'booking') {
+                const options = sanctuaryData.map(s => `<option value="${s.name}">${s.name} (${s.state})</option>`).join('');
+                bodyHTML = `<div class="text-center"><span class="section-label" style="background:#f0d68a;color:#0f2b1a;">🎟️ Plan Your Adventure</span><h2 class="section-title">Book a <span>Safari</span></h2><p style="color:#4a5e50;max-width:500px;margin:0 auto 20px;">Fill in the details below. <strong>This is a demo</strong> – live booking is coming soon!</p></div><div class="booking-form"><form id="safariBookingForm"><div class="form-group"><label for="sanctuarySelect">Select Sanctuary</label><select id="sanctuarySelect" required><option value="">-- Choose --</option>${options}</select></div><div class="form-group"><label for="visitDate">Preferred Date</label><input type="date" id="visitDate" required /></div><div class="form-group"><label for="adults">Adults</label><input type="number" id="adults" min="1" value="2" required /></div><div class="form-group"><label for="children">Children</label><input type="number" id="children" min="0" value="0" /></div><div class="form-group"><label for="visitorName">Full Name</label><input type="text" id="visitorName" placeholder="Enter your name" required /></div><div class="form-group"><label for="visitorEmail">Email Address</label><input type="email" id="visitorEmail" placeholder="Enter your email" required /></div><button type="submit" class="btn btn-gold"><i class="fas fa-check-circle"></i> Book Safari</button></form><div id="bookingMessage" style="margin-top:16px;font-weight:600;color:#2e8b57;text-align:center;"></div></div>`;
+                extraScript = `function handleBooking(e){e.preventDefault();const sanctuary=document.getElementById('sanctuarySelect').value;if(!sanctuary){alert('Please select a sanctuary.');return;}const date=document.getElementById('visitDate').value,adults=document.getElementById('adults').value,children=document.getElementById('children').value||0,visitorName=document.getElementById('visitorName').value,visitorEmail=document.getElementById('visitorEmail').value;const currentUserEmail=localStorage.getItem('vanadarpan_current_user');if(currentUserEmail){const users=JSON.parse(localStorage.getItem('vanadarpan_users'))||{};if(users[currentUserEmail]){if(!users[currentUserEmail].bookings)users[currentUserEmail].bookings=[];users[currentUserEmail].bookings.push({sanctuary,date,adults,children,visitorName,visitorEmail});localStorage.setItem('vanadarpan_users',JSON.stringify(users));alert('✅ Booking confirmed for '+sanctuary+' on '+date+'!\\nA confirmation email has been sent to '+visitorEmail+'.\\n\\n🌳 This booking has been saved to your profile.');}else{alert('✅ Booking confirmed for '+sanctuary+' on '+date+'!\\nA confirmation email has been sent to '+visitorEmail+'.');}}else{alert('✅ Booking confirmed for '+sanctuary+' on '+date+'!\\nA confirmation email has been sent to '+visitorEmail+'.\\n\\n💡 Sign up to save your bookings and track your time.')}document.getElementById('bookingMessage').innerHTML='✅ Booking request submitted successfully!';document.getElementById('bookingMessage').style.color='#2e8b57';document.getElementById('safariBookingForm').reset();}document.getElementById('safariBookingForm').addEventListener('submit',handleBooking);`;
+            } else if (type === 'route') {
+                const allCities = Object.keys(routeData).sort();
+                const cityOptions = allCities.map(city => `<option value="${city}">${city}</option>`).join('');
+                const sanctuaryOptions = sanctuaryData.map(s => `<option value="${s.name}">${s.name} (${s.state})</option>`).join('');
+                bodyHTML = `
+                <div class="text-center"><span class="section-label" style="background:#f0d68a;color:#0f2b1a;">🗺️ Route Planner</span><h2 class="section-title">Plan Your <span>Journey</span></h2><p style="color:#4a5e50;max-width:550px;margin:0 auto 20px;">Find the best route, distance, and travel tips to reach your chosen sanctuary.</p></div>
+                <div class="route-planner" style="max-width:700px;margin:0 auto;background:#fff;padding:30px;border-radius:12px;border:1px solid #c8eed8;">
+                    <div class="form-group"><label for="startCity">🚗 Starting City</label><select id="startCity" style="width:100%;padding:12px;border:2px solid #c8eed8;border-radius:12px;font-size:1rem;font-family:inherit;background:#fff;outline:none;cursor:pointer;"><option value="">-- Select your city --</option>${cityOptions}</select></div>
+                    <div class="form-group" style="margin-top:16px;"><label for="destSanctuary">🌳 Destination Sanctuary</label><select id="destSanctuary" style="width:100%;padding:12px;border:2px solid #c8eed8;border-radius:12px;font-size:1rem;font-family:inherit;background:#fff;outline:none;cursor:pointer;"><option value="">-- Select sanctuary --</option>${sanctuaryOptions}</select></div>
+                    <button class="btn btn-gold" onclick="planRoute()" style="width:100%;margin-top:18px;"><i class="fas fa-route"></i> Plan Route</button>
+                    <div id="routeResult" style="margin-top:20px;display:none;padding:20px;border-radius:12px;background:#e8f9ef;border-left:5px solid #2e8b57;"></div>
+                    <div id="routeError" style="margin-top:16px;color:#e74c3c;font-weight:600;display:none;text-align:center;"></div>
+                </div>
+                <div style="text-align:center;margin-top:16px;font-size:0.85rem;color:#5a6e60;">💡 Routes are approximate. Actual conditions may vary. Always check weather & road conditions before travel.</div>`;
+                extraScript = `
+                const routeData = ${JSON.stringify(routeData)};
+                const sanctuaryData = ${JSON.stringify(sanctuaryData)};
+                const weatherAdvisories = ${JSON.stringify({
+                    'Kerala': 'Monsoon season (Jun–Sep) brings heavy rains. Carry rain gear.',
+                    'Assam': 'Heavy rainfall during monsoon. Best visited Oct–Apr.',
+                    'Karnataka': 'Pleasant weather most of the year. Summer (Mar–May) can be hot.',
+                    'Tamil Nadu': 'Tropical climate. Monsoon from Oct–Dec. Best visited Nov–Feb.',
+                    'Maharashtra': 'Hot summers. Monsoon from Jun–Sep. Winter is pleasant.',
+                    'Madhya Pradesh': 'Extreme summers. Winter (Nov–Feb) is the best time.',
+                    'Rajasthan': 'Very hot in summer. Winter is pleasant (Oct–Mar).',
+                    'Uttarakhand': 'Cold winters. Summer (Apr–Jun) is pleasant. Monsoon from Jul–Sep.',
+                    'West Bengal': 'Humid climate. Monsoon from Jun–Sep. Best in winter.',
+                    'Gujarat': 'Hot and dry. Winter (Oct–Mar) is the best time to visit.',
+                    'Uttar Pradesh': 'Extreme climate. Winter (Nov–Feb) is pleasant.',
+                    'Odisha': 'Hot and humid. Monsoon from Jun–Sep. Winter is best.'
+                })};
+                function getWeatherAdvisory(state) {
+                    for (const [key, val] of Object.entries(weatherAdvisories)) {
+                        if (state && state.includes(key)) return val;
+                    }
+                    return 'Check local weather before your trip. Carry appropriate clothing and gear.';
+                }
+                function planRoute() {
+                    const startCity = document.getElementById('startCity').value;
+                    const destSanctuary = document.getElementById('destSanctuary').value;
+                    const resultDiv = document.getElementById('routeResult');
+                    const errorDiv = document.getElementById('routeError');
+                    resultDiv.style.display = 'none';
+                    errorDiv.style.display = 'none';
+                    if (!startCity) { errorDiv.innerHTML = '⚠️ Please select your starting city.'; errorDiv.style.display = 'block'; return; }
+                    if (!destSanctuary) { errorDiv.innerHTML = '⚠️ Please select a destination sanctuary.'; errorDiv.style.display = 'block'; return; }
+                    const sanctuary = sanctuaryData.find(s => s.name === destSanctuary);
+                    let route = null;
+                    if (routeData[startCity] && routeData[startCity][destSanctuary]) {
+                        route = routeData[startCity][destSanctuary];
+                    } else {
+                        const nearestCity = sanctuary ? sanctuary.city : 'the nearest city';
+                        route = {
+                            distance: 'Varies (check with local transport)',
+                            time: 'Varies',
+                            route: 'No direct route available. The nearest city to ' + destSanctuary + ' is ' + nearestCity + '. Take a flight/train to ' + nearestCity + ' and then a local taxi/bus.',
+                            road: 'Check local travel apps for real-time conditions.',
+                            tip: 'Plan your trip via ' + nearestCity + '. Book accommodations in advance.'
+                        };
+                    }
+                    resultDiv.style.display = 'block';
+                    resultDiv.innerHTML = '<div style="display:grid;gap:12px;">' +
+                        '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #c8eed8;"><strong>📍 From</strong><span>' + startCity + '</span></div>' +
+                        '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #c8eed8;"><strong>🌳 To</strong><span>' + destSanctuary + (sanctuary ? ' (' + sanctuary.state + ')' : '') + '</span></div>' +
+                        '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #c8eed8;"><strong>📏 Distance</strong><span>' + route.distance + '</span></div>' +
+                        '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #c8eed8;"><strong>⏱️ Travel Time</strong><span>' + route.time + '</span></div>' +
+                        '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #c8eed8;"><strong>🛣️ Route</strong><span style="text-align:right;">' + route.route + '</span></div>' +
+                        '<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #c8eed8;"><strong>🛤️ Road Condition</strong><span>' + route.road + '</span></div>' +
+                        '<div style="display:flex;justify-content:space-between;padding:8px 0;"><strong>💡 Travel Tip</strong><span>' + route.tip + '</span></div>' +
+                        (sanctuary ? '<div style="display:flex;justify-content:space-between;padding:8px 0;background:#d4a54a20;border-radius:8px;padding:8px 12px;"><strong>🌿 Forest Health Score</strong><span style="font-weight:700;color:#2e8b57;">' + sanctuary.score + '/100</span></div>' : '') +
+                        (sanctuary ? '<div style="display:flex;justify-content:space-between;padding:8px 0;"><strong>📅 Best Season</strong><span>' + sanctuary.season + '</span></div>' : '') +
+                        (sanctuary ? '<div style="display:flex;justify-content:space-between;padding:8px 0;"><strong>🌟 Best For</strong><span>' + sanctuary.bestFor + '</span></div>' : '') +
+                        '</div><div style="margin-top:12px;padding:12px;background:#fcf8f0;border-radius:8px;border:1px solid #f0d68a;text-align:center;font-size:0.9rem;">🌤️ <strong>Weather Advisory:</strong> ' + getWeatherAdvisory(sanctuary ? sanctuary.state : '') + '</div>';
+                }
+                `;
+            } else if (type === 'scores') {
+                const sortedStates = Object.values(stateMap).sort();
+                const options = sortedStates.map(s => `<option value="${s}">${s}</option>`).join('');
+                bodyHTML = `<div class="text-center"><span class="section-label">📊 Forest Health</span><h2 class="section-title">How the <span>Score</span> Works</h2></div><div class="score-showcase"><div class="score-visual"><div class="gauge"><div class="number">92 <small>/100</small></div><div class="meta"><strong>Periyar WS, Kerala</strong><span>Top scorer in South India</span></div></div><div class="score-factors"><div class="factor"><i class="fas fa-paw"></i><div class="info"><h5>Wildlife</h5><p>Population &amp; diversity</p></div></div><div class="factor"><i class="fas fa-wind"></i><div class="info"><h5>Pollution</h5><p>Air &amp; water quality</p></div></div><div class="factor"><i class="fas fa-tree"></i><div class="info"><h5>Tree Density</h5><p>Canopy &amp; green cover</p></div></div><div class="factor"><i class="fas fa-users"></i><div class="info"><h5>Disturbance</h5><p>Human impact level</p></div></div></div></div><div class="score-text"><h3>A simple number that tells <span style="color:#2e8b57;">how healthy a forest is</span></h3><p>The Forest Health Score is calculated using four key factors: <strong>wildlife population</strong>, <strong>pollution level</strong>, <strong>tree density</strong>, and <strong>human disturbance</strong>. A higher score means better forest health.</p></div></div><div class="state-finder"><h3>🌍 Find the Best Sanctuary in Your State</h3><div class="selector-group"><select id="stateSelector"><option value="">-- Select State --</option>${options}</select><button class="btn" onclick="showStateScore()"><i class="fas fa-search"></i> Get Health Score</button></div><div id="scoreResult"></div></div>`;
+                extraScript = `const sanctuaryData=${JSON.stringify(sanctuaryData)},stateMap=${JSON.stringify(stateMap)};function getBestSanctuary(state){const normalized=state.toLowerCase().trim();let match=null;for(const[key,val]of Object.entries(stateMap)){if(normalized.includes(key)||key.includes(normalized)||normalized===val.toLowerCase()){match=val;break;}}if(!match){const all=Object.values(stateMap);const suggestion=all.find(s=>s.toLowerCase().includes(normalized)||normalized.includes(s.toLowerCase()));if(suggestion)match=suggestion;}if(!match)return null;const filtered=sanctuaryData.filter(s=>s.state===match);if(filtered.length===0)return null;return filtered.reduce((a,b)=>a.score>b.score?a:b);}function formatSanctuaryReply(s){return '🌳 <strong>'+s.name+'</strong> ('+s.state+')<br/>📊 <strong>Health Score:</strong> '+s.score+'/100<br/>🐾 Wildlife: '+s.wildlife+' · 🌬️ Pollution: '+s.pollution+' · 🌲 Tree Density: '+s.treeDensity+' · 👥 Disturbance: '+s.disturbance+'<br/>📅 <strong>Best Season:</strong> '+s.season+'<br/>📍 <strong>Nearby City:</strong> '+s.city+'<br/>🚙 <strong>Safari:</strong> '+s.safari+'<br/>🌟 <strong>Best For:</strong> '+s.bestFor;}function showStateScore(){const select=document.getElementById('stateSelector'),state=select.value,resultDiv=document.getElementById('scoreResult');if(!state){resultDiv.style.display='block';resultDiv.innerHTML='⚠️ Please select a state first.';return;}const sanctuary=getBestSanctuary(state);if(sanctuary){resultDiv.style.display='block';resultDiv.innerHTML='<strong>🏆 Best in '+state+'</strong><br/><br/>'+formatSanctuaryReply(sanctuary);}else{resultDiv.style.display='block';resultDiv.innerHTML='❌ No sanctuary data found for '+state+'.';}}`;
+            } else if (type === 'features') {
+                bodyHTML = `<div class="text-center"><span class="section-label">✨ Why VanaDarpan</span><h2 class="section-title">What Makes Us <span>Unique</span></h2><p style="max-width:600px;margin:0 auto;color:#4a5e50;">First platform to combine forest health scoring, AI chatbot, and tourist planning — all in one.</p></div><div class="features-grid"><div class="feature-card"><span class="icon"><i class="fas fa-heart-circle-check"></i></span><h4>Health + Tourism</h4><p>Most platforms focus on either tourism or conservation. VanaDarpan does both in one place.</p></div><div class="feature-card"><span class="icon"><i class="fas fa-language"></i></span><h4>Hinglish First</h4><p>VanaBot understands Hinglish and simple English — no need for perfect grammar.</p></div><div class="feature-card"><span class="icon"><i class="fas fa-cloud-sun"></i></span><h4>Future-Ready</h4><p>Easily integrate satellite data, live booking, and real-time alerts in the future.</p></div><div class="feature-card"><span class="icon"><i class="fas fa-mobile-screen-button"></i></span><h4>Works Anywhere</h4><p>No login required. Works on every device — phone, tablet, or desktop.</p></div></div>`;
+            } else if (type === 'problemsolution') {
+                bodyHTML = `<div class="text-center"><span class="section-label">⚠️ The Challenge</span><h2 class="section-title">Why <span>VanaDarpan</span> is Needed</h2><p style="max-width:600px;margin:0 auto;color:#4a5e50;">Forest data is scattered, complex, and hard to access.</p></div><div class="problem-grid"><div class="problem-card"><h3><i class="fas fa-database"></i> Data Chaos</h3><ul><li><i class="fas fa-circle"></i> Government forest data is complex and not easily available</li><li><i class="fas fa-circle"></i> Info like best season, safari timings, nearby cities is scattered</li><li><i class="fas fa-circle"></i> No smart assistant for simple questions</li><li><i class="fas fa-circle"></i> Hard to compare two sanctuaries</li></ul></div><div class="problem-card"><h3><i class="fas fa-earth-asia"></i> Conservation & Tourism Gap</h3><ul><li><i class="fas fa-circle"></i> Low conservation awareness</li><li><i class="fas fa-circle"></i> Travelers choose popular spots without knowing forest health</li><li><i class="fas fa-circle"></i> Missed opportunities for eco-tourism</li><li><i class="fas fa-circle"></i> Less-known but healthier sanctuaries get poor support</li></ul></div></div><div class="solution-card"><h3><i class="fas fa-sparkles"></i> VanaDarpan — Forest Health + Smart Tourism</h3><p><strong>0–100 Forest Health Score</strong> based on wildlife, pollution, tree density, and human disturbance. Select any Indian state to instantly find the best sanctuary with the highest score, along with travel details like best season and nearby city. <strong>VanaBot</strong> answers all forest-related questions in easy Hinglish or English.</p><div class="solution-tags"><span>🌿 Health Score</span><span>🤖 AI Chatbot</span><span>🗺️ State Finder</span><span>📊 Compare</span></div></div>`;
+            } else if (type === 'pledge') {
+                bodyHTML = `<div class="text-center"><span class="section-label" style="background:#f0d68a;color:#0f2b1a;">🌱 Take Action</span><h2 class="section-title">Change <span>Starts Today</span></h2></div><div class="pledge-box"><p><i class="fas fa-quote-left" style="color:#d4a54a;font-size:1.8rem;opacity:0.4;display:block;margin-bottom:8px;"></i>"Turn awareness into action. Take a conservation pledge, explore forest facts, and become a part of India's green future."</p><div class="pledge-buttons"><button class="btn btn-gold" onclick="pledgeAction()"><i class="fas fa-hand-holding-heart"></i> Take the Pledge</button><button class="btn btn-outline" onclick="alert('🌿 Did you know? India has over 100 national parks and 500+ wildlife sanctuaries!')"><i class="fas fa-lightbulb"></i> Forest Fact</button></div><div id="pledgeMessage"></div></div>`;
+                extraScript = `function pledgeAction(){const msg=document.getElementById('pledgeMessage');const pledges=['🌳 Thank you! You pledged to plant 5 trees this year!','💚 Amazing! You pledged to reduce plastic use in forests!','🐾 You pledged to respect wildlife and keep forests clean!','🌿 You pledged to spread awareness about forest health!','🌸 You pledged to visit a less-known sanctuary this year!'];msg.textContent=pledges[Math.floor(Math.random()*pledges.length)];}`;
+            } else if (type === 'tips') {
+                bodyHTML = `
+                <div class="text-center"><span class="section-label" style="background:#f0d68a;color:#0f2b1a;">✈️ Travel Tips</span><h2 class="section-title">Plan Your <span>Safari</span> Like a Pro</h2></div>
+                <div style="max-width:700px;margin:0 auto;padding:20px 0;">
+                    <div style="background:#fff;padding:24px;border-radius:12px;border:1px solid #c8eed8;margin-bottom:16px;">
+                        <h4 style="color:#2e8b57;margin-bottom:8px;">📅 Best Time to Visit</h4>
+                        <p style="color:#4a5e50;">Most Indian sanctuaries are best visited between <strong>October and June</strong>. The weather is pleasant, and wildlife sightings are more frequent during the dry season.</p>
+                    </div>
+                    <div style="background:#fff;padding:24px;border-radius:12px;border:1px solid #c8eed8;margin-bottom:16px;">
+                        <h4 style="color:#2e8b57;margin-bottom:8px;">🎒 What to Carry</h4>
+                        <ul style="color:#4a5e50;list-style:none;padding:0;">
+                            <li style="padding:4px 0;">• Binoculars for better wildlife viewing</li>
+                            <li style="padding:4px 0;">• Neutral-colored clothing (avoid bright colors)</li>
+                            <li style="padding:4px 0;">• Sunscreen, hat, and sunglasses</li>
+                            <li style="padding:4px 0;">• Reusable water bottle</li>
+                        </ul>
+                    </div>
+                    <div style="background:#fff;padding:24px;border-radius:12px;border:1px solid #c8eed8;">
+                        <h4 style="color:#2e8b57;margin-bottom:8px;">📸 Safari Etiquette</h4>
+                        <ul style="color:#4a5e50;list-style:none;padding:0;">
+                            <li style="padding:4px 0;">• Maintain silence to avoid disturbing animals</li>
+                            <li style="padding:4px 0;">• Never feed or tease wildlife</li>
+                            <li style="padding:4px 0;">• Stay inside the vehicle at all times</li>
+                            <li style="padding:4px 0;">• Respect the forest – take only photos, leave only footprints</li>
+                        </ul>
+                    </div>
+                </div>`;
+            } else if (type === 'impact') {
+                bodyHTML = `
+                <div class="text-center"><span class="section-label" style="background:#f0d68a;color:#0f2b1a;">🌍 Conservation Impact</span><h2 class="section-title">Making a <span>Difference</span> Together</h2></div>
+                <div style="max-width:700px;margin:0 auto;padding:20px 0;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+                        <div style="background:#fff;padding:24px;border-radius:12px;border:1px solid #c8eed8;text-align:center;">
+                            <div style="font-size:2.4rem;font-weight:800;color:#2e8b57;">1,247</div>
+                            <div style="color:#4a5e50;font-size:0.9rem;">Trees Planted</div>
+                        </div>
+                        <div style="background:#fff;padding:24px;border-radius:12px;border:1px solid #c8eed8;text-align:center;">
+                            <div style="font-size:2.4rem;font-weight:800;color:#2e8b57;">5,892</div>
+                            <div style="color:#4a5e50;font-size:0.9rem;">Pledges Taken</div>
+                        </div>
+                        <div style="background:#fff;padding:24px;border-radius:12px;border:1px solid #c8eed8;text-align:center;">
+                            <div style="font-size:2.4rem;font-weight:800;color:#2e8b57;">312</div>
+                            <div style="color:#4a5e50;font-size:0.9rem;">Active Members</div>
+                        </div>
+                        <div style="background:#fff;padding:24px;border-radius:12px;border:1px solid #c8eed8;text-align:center;">
+                            <div style="font-size:2.4rem;font-weight:800;color:#2e8b57;">18</div>
+                            <div style="color:#4a5e50;font-size:0.9rem;">Sanctuaries Supported</div>
+                        </div>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#1a4a2e,#256f45);color:#fff;padding:24px;border-radius:12px;text-align:center;">
+                        <p style="font-size:1.1rem;">"Together, we are turning awareness into action. Every pledge, every tree, and every visit contributes to a healthier planet."</p>
+                        <p style="margin-top:8px;opacity:0.7;">🌿 VanaDarpan Community</p>
+                    </div>
+                </div>`;
+            } else if (type === 'endangered') {
+                bodyHTML = `
+                <div class="text-center"><span class="section-label" style="background:#f0d68a;color:#0f2b1a;">🦏 Endangered Species</span><h2 class="section-title">India's <span>Most Threatened</span> Wildlife</h2></div>
+                <div style="max-width:800px;margin:0 auto;padding:20px 0;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                        <div style="background:#fff;padding:20px;border-radius:12px;border-left:5px solid #e74c3c;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                            <h4 style="color:#e74c3c;font-size:1.1rem;">🐯 Royal Bengal Tiger</h4>
+                            <p style="color:#4a5e50;font-size:0.9rem;margin:4px 0;"><strong>Population:</strong> ~2,967 (2022)</p>
+                            <p style="color:#4a5e50;font-size:0.9rem;margin:4px 0;"><strong>Status:</strong> Endangered</p>
+                            <p style="color:#4a5e50;font-size:0.85rem;margin:4px 0;"><strong>Threats:</strong> Poaching, habitat loss, human-wildlife conflict</p>
+                        </div>
+                        <div style="background:#fff;padding:20px;border-radius:12px;border-left:5px solid #e67e22;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                            <h4 style="color:#e67e22;font-size:1.1rem;">🐘 Indian Elephant</h4>
+                            <p style="color:#4a5e50;font-size:0.9rem;margin:4px 0;"><strong>Population:</strong> ~27,000 (2017)</p>
+                            <p style="color:#4a5e50;font-size:0.9rem;margin:4px 0;"><strong>Status:</strong> Endangered</p>
+                            <p style="color:#4a5e50;font-size:0.85rem;margin:4px 0;"><strong>Threats:</strong> Habitat fragmentation, poaching, railway collisions</p>
+                        </div>
+                        <div style="background:#fff;padding:20px;border-radius:12px;border-left:5px solid #2ecc71;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                            <h4 style="color:#2ecc71;font-size:1.1rem;">🦏 One-horned Rhinoceros</h4>
+                            <p style="color:#4a5e50;font-size:0.9rem;margin:4px 0;"><strong>Population:</strong> ~3,000 (2022)</p>
+                            <p style="color:#4a5e50;font-size:0.9rem;margin:4px 0;"><strong>Status:</strong> Vulnerable (recovering)</p>
+                            <p style="color:#4a5e50;font-size:0.85rem;margin:4px 0;"><strong>Threats:</strong> Poaching for horns, habitat encroachment</p>
+                        </div>
+                        <div style="background:#fff;padding:20px;border-radius:12px;border-left:5px solid #f1c40f;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                            <h4 style="color:#f1c40f;font-size:1.1rem;">🦁 Asiatic Lion</h4>
+                            <p style="color:#4a5e50;font-size:0.9rem;margin:4px 0;"><strong>Population:</strong> ~674 (2020)</p>
+                            <p style="color:#4a5e50;font-size:0.9rem;margin:4px 0;"><strong>Status:</strong> Endangered</p>
+                            <p style="color:#4a5e50;font-size:0.85rem;margin:4px 0;"><strong>Threats:</strong> Disease outbreaks, natural disasters, genetic bottleneck</p>
+                        </div>
+                        <div style="background:#fff;padding:20px;border-radius:12px;border-left:5px solid #3498db;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                            <h4 style="color:#3498db;font-size:1.1rem;">🐆 Snow Leopard</h4>
+                            <p style="color:#4a5e50;font-size:0.9rem;margin:4px 0;"><strong>Population:</strong> ~500 (estimated)</p>
+                            <p style="color:#4a5e50;font-size:0.9rem;margin:4px 0;"><strong>Status:</strong> Vulnerable</p>
+                            <p style="color:#4a5e50;font-size:0.85rem;margin:4px 0;"><strong>Threats:</strong> Climate change, poaching, human-wildlife conflict</p>
+                        </div>
+                        <div style="background:#fff;padding:20px;border-radius:12px;border-left:5px solid #9b59b6;box-shadow:0 2px 8px rgba(0,0,0,0.06);">
+                            <h4 style="color:#9b59b6;font-size:1.1rem;">🦜 Great Indian Bustard</h4>
+                            <p style="color:#4a5e50;font-size:0.9rem;margin:4px 0;"><strong>Population:</strong> ~150 (2022)</p>
+                            <p style="color:#4a5e50;font-size:0.9rem;margin:4px 0;"><strong>Status:</strong> Critically Endangered</p>
+                            <p style="color:#4a5e50;font-size:0.85rem;margin:4px 0;"><strong>Threats:</strong> Power lines, habitat loss, hunting</p>
+                        </div>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#1a4a2e,#256f45);color:#fff;padding:20px;border-radius:12px;margin-top:20px;text-align:center;">
+                        <p style="font-size:1rem;">💚 <strong>You can help:</strong> Support conservation efforts, visit responsibly, and spread awareness about India's magnificent wildlife.</p>
+                    </div>
+                </div>`;
+            } else if (type === 'learning') {
+                bodyHTML = `
+                <div class="text-center"><span class="section-label" style="background:#f0d68a;color:#0f2b1a;">📚 Learning Modules</span><h2 class="section-title">Explore India's <span>Forests & Biodiversity</span></h2></div>
+                <div style="max-width:800px;margin:0 auto;padding:20px 0;">
+                    <div style="background:#fff;padding:20px;border-radius:12px;border:1px solid #c8eed8;margin-bottom:16px;">
+                        <h4 style="color:#2e8b57;">🌳 Types of Forests in India</h4>
+                        <ul style="color:#4a5e50;padding:8px 0 0 20px;line-height:1.8;">
+                            <li><strong>Tropical Rainforests</strong> – Found in Western Ghats and Northeast India. High rainfall, dense vegetation, rich biodiversity.</li>
+                            <li><strong>Tropical Deciduous Forests</strong> – Most common type, found across India. Trees shed leaves in dry season.</li>
+                            <li><strong>Mangrove Forests</strong> – Found in coastal areas, especially Sundarbans. Adapted to saline water.</li>
+                            <li><strong>Montane Forests</strong> – Found in Himalayas and high-altitude regions. Coniferous trees like pine and deodar.</li>
+                            <li><strong>Thorn Forests</strong> – Found in arid regions like Rajasthan. Cacti, acacia, and drought-resistant plants.</li>
+                        </ul>
+                    </div>
+                    <div style="background:#fff;padding:20px;border-radius:12px;border:1px solid #c8eed8;margin-bottom:16px;">
+                        <h4 style="color:#2e8b57;">🐯 India's Biodiversity Hotspots</h4>
+                        <ul style="color:#4a5e50;padding:8px 0 0 20px;line-height:1.8;">
+                            <li><strong>Western Ghats</strong> – One of the world's most biodiverse regions. Home to lion-tailed macaque, Malabar civet, and thousands of plant species.</li>
+                            <li><strong>Himalayas</strong> – Home to snow leopards, red pandas, Himalayan monal, and rare medicinal plants.</li>
+                            <li><strong>Indo-Burma</strong> – Covers Northeast India, including Assam and Meghalaya. Known for one-horned rhino and hoolock gibbon.</li>
+                            <li><strong>Sundarbans</strong> – World's largest mangrove forest. Famous for Royal Bengal tigers and saltwater crocodiles.</li>
+                            <li><strong>Eastern Ghats</strong> – Less explored but rich in biodiversity. Home to many endemic bird and reptile species.</li>
+                        </ul>
+                    </div>
+                    <div style="background:#fff;padding:20px;border-radius:12px;border:1px solid #c8eed8;margin-bottom:16px;">
+                        <h4 style="color:#2e8b57;">📊 Key Conservation Terms</h4>
+                        <ul style="color:#4a5e50;padding:8px 0 0 20px;line-height:1.8;">
+                            <li><strong>Biodiversity</strong> – The variety of life in a particular habitat or ecosystem.</li>
+                            <li><strong>Endangered Species</strong> – Species at risk of extinction due to habitat loss, poaching, or climate change.</li>
+                            <li><strong>Habitat Loss</strong> – Destruction of natural environments due to deforestation, urbanization, and agriculture.</li>
+                            <li><strong>Ecotourism</strong> – Responsible travel to natural areas that conserves the environment and improves the well-being of local people.</li>
+                            <li><strong>Wildlife Corridor</strong> – A protected route that connects fragmented habitats and allows animals to move safely.</li>
+                            <li><strong>Poaching</strong> – Illegal hunting or capturing of wild animals, often for trade or trophies.</li>
+                            <li><strong>Reforestation</strong> – Planting trees in areas that have been deforested to restore ecosystems.</li>
+                            <li><strong>Carbon Sequestration</strong> – The process by which forests absorb carbon dioxide and help fight climate change.</li>
+                        </ul>
+                    </div>
+                    <div style="background:#fff;padding:20px;border-radius:12px;border:1px solid #c8eed8;margin-bottom:16px;">
+                        <h4 style="color:#2e8b57;">🦜 Wildlife Facts</h4>
+                        <ul style="color:#4a5e50;padding:8px 0 0 20px;line-height:1.8;">
+                            <li>🐯 India is home to <strong>70% of the world's tiger population</strong>.</li>
+                            <li>🐘 The <strong>Asian elephant</strong> population in India is around 27,000.</li>
+                            <li>🦏 The <strong>One-horned Rhinoceros</strong> population has increased from 200 in 1900 to ~3,000 today.</li>
+                            <li>🐦 India has over <strong>1,300 species of birds</strong> – more than most countries.</li>
+                            <li>🌿 The <strong>Western Ghats</strong> contain over 7,000 species of flowering plants.</li>
+                            <li>🐆 The <strong>Snow Leopard</strong> is found in the Himalayas at altitudes of 3,000-4,500 meters.</li>
+                            <li>🌳 <strong>Mangroves</strong> in India store 10 times more carbon than tropical forests.</li>
+                        </ul>
+                    </div>
+                    <div style="background:#fff;padding:20px;border-radius:12px;border:1px solid #c8eed8;margin-bottom:16px;">
+                        <h4 style="color:#2e8b57;">🌍 Ecosystem Services Provided by Forests</h4>
+                        <ul style="color:#4a5e50;padding:8px 0 0 20px;line-height:1.8;">
+                            <li>🌬️ <strong>Air Purification</strong> – Forests absorb pollutants and produce oxygen.</li>
+                            <li>💧 <strong>Water Regulation</strong> – Forests maintain water cycles and prevent floods.</li>
+                            <li>🌱 <strong>Soil Conservation</strong> – Tree roots prevent soil erosion.</li>
+                            <li>🌡️ <strong>Climate Regulation</strong> – Forests absorb CO2 and help control global warming.</li>
+                            <li>🏥 <strong>Medicinal Resources</strong> – 25% of modern medicines come from forest plants.</li>
+                            <li>💰 <strong>Livelihoods</strong> – Millions of people depend on forests for fuel, food, and income.</li>
+                        </ul>
+                    </div>
+                    <div style="background:#fff;padding:20px;border-radius:12px;border:1px solid #c8eed8;margin-bottom:16px;">
+                        <h4 style="color:#2e8b57;">⚠️ Major Threats to Indian Forests</h4>
+                        <ul style="color:#4a5e50;padding:8px 0 0 20px;line-height:1.8;">
+                            <li><strong>Deforestation</strong> – Clearing of forests for agriculture, urbanization, and infrastructure.</li>
+                            <li><strong>Poaching</strong> – Illegal hunting of endangered species for trade and trophies.</li>
+                            <li><strong>Climate Change</strong> – Alters rainfall patterns and temperatures, affecting forest health.</li>
+                            <li><strong>Invasive Species</strong> – Non-native plants and animals disrupt native ecosystems.</li>
+                            <li><strong>Human-Wildlife Conflict</strong> – Animals stray into human settlements, leading to deaths on both sides.</li>
+                            <li><strong>Pollution</strong> – Air, water, and plastic pollution degrade forest ecosystems.</li>
+                        </ul>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#1a4a2e,#256f45);color:#fff;padding:20px;border-radius:12px;text-align:center;">
+                        <h4 style="color:#d4a54a;margin-bottom:8px;">🌟 Conservation Success Stories</h4>
+                        <ul style="color:rgba(255,255,255,0.9);padding:8px 0 0 20px;text-align:left;line-height:1.8;">
+                            <li>🐯 <strong>Project Tiger (1973)</strong> – Increased tiger population from 1,800 to ~3,000 today.</li>
+                            <li>🦏 <strong>Rhino Conservation in Kaziranga</strong> – Rhino population recovered from 200 to over 3,000.</li>
+                            <li>🦁 <strong>Asiatic Lion Recovery in Gir</strong> – Lion population increased from 20 to over 674.</li>
+                            <li>🌳 <strong>Joint Forest Management</strong> – Local communities involved in protecting forests across India.</li>
+                        </ul>
+                    </div>
+                </div>`;
+            } else if (type === 'quiz') {
+                bodyHTML = `
+                <div class="text-center"><span class="section-label" style="background:#f0d68a;color:#0f2b1a;">🧠 Test Your Knowledge</span><h2 class="section-title">Forest <span>Quiz</span></h2><p style="max-width:500px;margin:0 auto 20px;color:#4a5e50;">Answer 10 questions and see how much you know about India's forests!</p></div>
+                <div id="quizContainer" style="max-width:700px;margin:0 auto;padding:20px 0;">
+                    <div id="quizStartScreen" style="text-align:center;background:#fff;padding:30px;border-radius:12px;border:1px solid #c8eed8;">
+                        <div style="font-size:4rem;margin-bottom:16px;">🌿</div>
+                        <h3 style="font-size:1.4rem;margin-bottom:8px;">Ready to test your forest knowledge?</h3>
+                        <p style="color:#4a5e50;">10 questions · Multiple choice · Instant feedback</p>
+                        <button class="btn btn-gold" onclick="startQuiz()" style="margin-top:16px;"><i class="fas fa-play"></i> Start Quiz</button>
+                    </div>
+                    <div id="quizQuestionScreen" style="display:none;background:#fff;padding:30px;border-radius:12px;border:1px solid #c8eed8;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                            <span style="font-size:0.9rem;color:#5a6e60;">Question <span id="qNum">1</span>/10</span>
+                            <span style="font-size:0.9rem;font-weight:600;color:#2e8b57;" id="qScore">Score: 0</span>
+                        </div>
+                        <div style="background:#e8f9ef;height:6px;border-radius:10px;margin-bottom:20px;overflow:hidden;">
+                            <div id="qProgress" style="height:100%;width:10%;background:#2e8b57;border-radius:10px;transition:width 0.3s;"></div>
+                        </div>
+                        <h4 id="qText" style="font-size:1.2rem;margin-bottom:16px;line-height:1.6;">Question here</h4>
+                        <div id="qOptions" style="display:flex;flex-direction:column;gap:10px;"></div>
+                        <div id="qExplanation" style="margin-top:16px;padding:12px;border-radius:8px;display:none;background:#e8f9ef;border-left:4px solid #2e8b57;"></div>
+                        <button id="qNextBtn" class="btn" style="margin-top:16px;display:none;width:100%;" onclick="nextQuestion()"><i class="fas fa-arrow-right"></i> Next Question</button>
+                    </div>
+                    <div id="quizResultScreen" style="display:none;background:#fff;padding:30px;border-radius:12px;border:1px solid #c8eed8;text-align:center;">
+                        <div id="resultEmoji" style="font-size:4rem;margin-bottom:8px;">🏆</div>
+                        <h3 style="font-size:1.8rem;margin-bottom:4px;" id="resultTitle">Great Job!</h3>
+                        <p style="color:#4a5e50;font-size:1.1rem;">You scored <strong id="resultScore">0</strong> out of <strong>10</strong> (<span id="resultPercent">0%</span>)</p>
+                        <div style="background:#e8f9ef;height:10px;border-radius:10px;margin:16px auto;max-width:300px;overflow:hidden;">
+                            <div id="resultBar" style="height:100%;width:0%;background:#2e8b57;border-radius:10px;transition:width 1s ease;"></div>
+                        </div>
+                        <p id="resultMessage" style="color:#4a5e50;margin:12px 0 20px;font-size:1rem;"></p>
+                        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                            <button class="btn" onclick="retryQuiz()"><i class="fas fa-redo"></i> Retry Quiz</button>
+                            <button class="btn btn-outline" onclick="window.close()"><i class="fas fa-times"></i> Close</button>
+                        </div>
+                    </div>
+                </div>`;
+                extraScript = `
+                const quizQuestions = ${JSON.stringify(quizQuestions)};
+                let quizState = { questions: [], currentQ: 0, score: 0, answered: false };
+                function initQuiz() { quizState.questions = [...quizQuestions]; quizState.currentQ = 0; quizState.score = 0; quizState.answered = false; }
+                function startQuiz() { initQuiz(); document.getElementById('quizStartScreen').style.display = 'none'; document.getElementById('quizQuestionScreen').style.display = 'block'; showQuestion(); }
+                function showQuestion() { const q = quizState.questions[quizState.currentQ]; document.getElementById('qNum').textContent = quizState.currentQ + 1; document.getElementById('qScore').textContent = 'Score: ' + quizState.score; document.getElementById('qProgress').style.width = ((quizState.currentQ + 1) / quizState.questions.length * 100) + '%'; document.getElementById('qText').textContent = q.question; document.getElementById('qExplanation').style.display = 'none'; document.getElementById('qNextBtn').style.display = 'none'; quizState.answered = false; const container = document.getElementById('qOptions'); container.innerHTML = ''; const letters = ['A','B','C','D']; q.options.forEach((opt, idx) => { const btn = document.createElement('button'); btn.className = 'quiz-option'; btn.innerHTML = '<span style="font-weight:700;color:#2e8b57;margin-right:8px;">' + letters[idx] + '.</span> ' + opt; btn.style.cssText = 'padding:12px 16px;border:2px solid #c8eed8;border-radius:12px;background:#fff;cursor:pointer;text-align:left;transition:0.3s;font-family:inherit;font-size:1rem;width:100%;'; btn.onmouseover = function() { if(!quizState.answered) this.style.borderColor = '#2e8b57'; }; btn.onmouseout = function() { if(!quizState.answered) this.style.borderColor = '#c8eed8'; }; btn.onclick = function() { selectAnswer(idx); }; container.appendChild(btn); }); document.getElementById('qOptions').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+                function selectAnswer(idx) { if (quizState.answered) return; quizState.answered = true; const q = quizState.questions[quizState.currentQ]; const options = document.querySelectorAll('.quiz-option'); options.forEach((btn, i) => { btn.style.cursor = 'default'; btn.onmouseover = null; btn.onmouseout = null; if (i === q.correct) { btn.style.borderColor = '#2e8b57'; btn.style.background = '#e8f9ef'; btn.style.boxShadow = 'inset 0 0 0 2px #2e8b57'; } else if (i === idx && idx !== q.correct) { btn.style.borderColor = '#e74c3c'; btn.style.background = '#fde8e8'; btn.style.boxShadow = 'inset 0 0 0 2px #e74c3c'; } if (i === idx && idx === q.correct) { quizState.score++; document.getElementById('qScore').textContent = 'Score: ' + quizState.score; } }); const expl = document.getElementById('qExplanation'); expl.style.display = 'block'; expl.innerHTML = '<strong>' + (idx === q.correct ? '✅ Correct! ' : '❌ Incorrect. ') + '</strong>' + q.explanation; if (idx === q.correct) { expl.style.background = '#e8f9ef'; expl.style.borderLeftColor = '#2e8b57'; } else { expl.style.background = '#fde8e8'; expl.style.borderLeftColor = '#e74c3c'; } const nextBtn = document.getElementById('qNextBtn'); if (quizState.currentQ < quizState.questions.length - 1) { nextBtn.style.display = 'block'; nextBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Next Question'; } else { nextBtn.style.display = 'block'; nextBtn.innerHTML = '📊 See Results'; } }
+                function nextQuestion() { quizState.currentQ++; if (quizState.currentQ < quizState.questions.length) { showQuestion(); } else { showResults(); } }
+                function showResults() { document.getElementById('quizQuestionScreen').style.display = 'none'; document.getElementById('quizResultScreen').style.display = 'block'; const percent = Math.round((quizState.score / quizState.questions.length) * 100); document.getElementById('resultScore').textContent = quizState.score; document.getElementById('resultPercent').textContent = percent + '%'; document.getElementById('resultBar').style.width = percent + '%'; let emoji, title, message; if (percent === 100) { emoji = '🏆'; title = 'Perfect Score!'; message = 'You\\'re a true forest expert! 🌿 Keep learning and sharing your knowledge!'; } else if (percent >= 80) { emoji = '🌟'; title = 'Excellent!'; message = 'You have great knowledge about India\\'s forests!'; } else if (percent >= 60) { emoji = '📚'; title = 'Good Job!'; message = 'You know a lot about forests. Keep exploring and learning more!'; } else if (percent >= 40) { emoji = '🌱'; title = 'Not Bad!'; message = 'You\\'re on the right track. Review the learning modules to improve your score!'; } else { emoji = '🧠'; title = 'Keep Learning!'; message = 'Don\\'t worry! Visit the Learning Modules section and try the quiz again.'; } document.getElementById('resultEmoji').textContent = emoji; document.getElementById('resultTitle').textContent = title; document.getElementById('resultMessage').textContent = message; }
+                function retryQuiz() { document.getElementById('quizResultScreen').style.display = 'none'; document.getElementById('quizStartScreen').style.display = 'block'; }
+                `;
+            } else if (type === 'research') {
+                bodyHTML = `
+                <div class="text-center"><span class="section-label" style="background:#f0d68a;color:#0f2b1a;">🔬 Research Resources</span><h2 class="section-title">Tools & Data for <span>Students</span></h2></div>
+                <div style="max-width:700px;margin:0 auto;padding:20px 0;">
+                    <div style="background:#fff;padding:20px;border-radius:12px;border:1px solid #c8eed8;margin-bottom:16px;">
+                        <h4 style="color:#2e8b57;">📈 Useful Datasets</h4>
+                        <ul style="color:#4a5e50;padding:8px 0 0 20px;">
+                            <li>• Forest cover data (ISFR reports)</li>
+                            <li>• Wildlife population statistics</li>
+                            <li>• Climate and rainfall data</li>
+                            <li>• Protected area boundaries</li>
+                        </ul>
+                    </div>
+                    <div style="background:#fff;padding:20px;border-radius:12px;border:1px solid #c8eed8;margin-bottom:16px;">
+                        <h4 style="color:#2e8b57;">📝 Project Ideas</h4>
+                        <ul style="color:#4a5e50;padding:8px 0 0 20px;">
+                            <li>• Compare forest health across states</li>
+                            <li>• Study endangered species population trends</li>
+                            <li>• Analyze the impact of tourism on forests</li>
+                            <li>• Map deforestation patterns over time</li>
+                        </ul>
+                    </div>
+                    <div style="background:linear-gradient(135deg,#1a4a2e,#256f45);color:#fff;padding:20px;border-radius:12px;text-align:center;">
+                        <p style="font-size:1rem;">📚 <strong>Download our complete research guide</strong> – coming soon!</p>
+                        <p style="font-size:0.8rem;margin-top:4px;opacity:0.8;">Includes data sources, methodology, and sample projects</p>
+                    </div>
+                </div>`;
+            }
+
+            const pageStyles = `*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Inter',-apple-system,sans-serif;background:#fcf8f0;color:#1a1f1a;line-height:1.6;padding:20px;}a{text-decoration:none;color:inherit;}.container{max-width:1000px;margin:0 auto;padding:0 20px;}.text-center{text-align:center;}.section-label{display:inline-block;font-size:0.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#2e8b57;background:#c8eed8;padding:4px 16px;border-radius:100px;margin-bottom:12px;}.section-title{font-size:clamp(1.8rem,3vw,2.6rem);font-weight:800;line-height:1.2;margin-bottom:16px;}.section-title span{color:#2e8b57;}.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 34px;border-radius:60px;font-weight:600;font-size:1rem;border:none;cursor:pointer;transition:0.3s;background:#2e8b57;color:#fff;box-shadow:0 8px 24px rgba(46,139,87,0.30);font-family:inherit;}.btn:hover{transform:translateY(-3px);box-shadow:0 14px 34px rgba(46,139,87,0.40);background:#256f45;}.btn-gold{background:#d4a54a;color:#1a1f1a;box-shadow:0 8px 24px rgba(212,165,74,0.35);}.btn-gold:hover{background:#c4963a;box-shadow:0 14px 34px rgba(212,165,74,0.45);}.btn-outline{background:transparent;color:#2e8b57;box-shadow:inset 0 0 0 2px #2e8b57;}.btn-outline:hover{background:#2e8b57;color:#fff;}.back-link{display:inline-block;margin-bottom:20px;color:#2e8b57;font-weight:600;cursor:pointer;transition:0.3s;}.back-link:hover{color:#1a4a2e;text-decoration:underline;}.compare-selectors{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin:20px 0;}.compare-selectors select{padding:10px 16px;border:2px solid #c8eed8;border-radius:12px;font-size:0.95rem;font-family:inherit;background:#fff;min-width:180px;cursor:pointer;}.compare-selectors select:focus{outline:none;border-color:#2e8b57;box-shadow:0 0 0 4px #e8f9ef;}.compare-table-wrap{overflow-x:auto;margin-top:16px;}.compare-table{width:100%;border-collapse:collapse;font-size:0.9rem;}.compare-table th,.compare-table td{padding:12px 16px;border:1px solid #c8eed8;text-align:left;}.compare-table th{background:#e8f9ef;font-weight:700;color:#1a4a2e;min-width:140px;}.compare-table .highlight-best{background:rgba(46,139,87,0.12)!important;font-weight:600;border-left:3px solid #2e8b57;}.compare-table .score-cell{font-weight:700;font-size:1.1rem;}.no-compare-msg{text-align:center;color:#5a6e60;padding:30px;font-size:1.1rem;}.state-finder{margin-top:30px;padding-top:30px;border-top:2px solid #c8eed8;text-align:center;}.state-finder h3{font-size:1.4rem;margin-bottom:12px;}.state-finder .selector-group{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;}.state-finder select{padding:12px 24px;border-radius:60px;border:2px solid #c8eed8;font-size:1rem;background:white;min-width:200px;font-family:inherit;cursor:pointer;}.state-finder select:focus{outline:none;border-color:#2e8b57;box-shadow:0 0 0 4px #e8f9ef;}#scoreResult{margin-top:24px;padding:24px;background:#e8f9ef;border-radius:12px;min-height:60px;text-align:left;display:none;border-left:5px solid #2e8b57;line-height:1.8;}.booking-form{max-width:500px;margin:0 auto;}.booking-form .form-group{margin-bottom:16px;}.booking-form label{display:block;font-weight:600;margin-bottom:4px;color:#1a1f1a;}.booking-form input,.booking-form select{width:100%;padding:10px 14px;border:2px solid #c8eed8;border-radius:12px;font-size:1rem;font-family:inherit;transition:0.3s;background:#fff;}.booking-form input:focus,.booking-form select:focus{outline:none;border-color:#2e8b57;box-shadow:0 0 0 4px #e8f9ef;}.booking-form .btn{width:100%;margin-top:8px;}.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:20px;}.feature-card{background:#fff;padding:24px 20px;border-radius:12px;text-align:center;border:1px solid rgba(46,139,87,0.06);box-shadow:0 4px 12px rgba(15,43,26,0.06);}.feature-card .icon{font-size:2.4rem;color:#2e8b57;margin-bottom:8px;display:block;}.feature-card h4{font-size:1.05rem;margin-bottom:4px;}.feature-card p{font-size:0.9rem;color:#4a5e50;}.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:20px;}.problem-card{background:#fcf8f0;padding:24px;border-radius:12px;border-left:5px solid #2e8b57;}.problem-card h3{font-size:1.1rem;margin-bottom:8px;display:flex;gap:10px;align-items:center;}.problem-card h3 i{color:#2e8b57;}.problem-card ul{list-style:none;padding:0;}.problem-card ul li{padding:4px 0;display:flex;gap:10px;font-size:0.95rem;color:#2d3d33;}.problem-card ul li i{color:#d4a54a;margin-top:4px;font-size:0.7rem;}.solution-card{background:linear-gradient(135deg,#1a4a2e,#256f45);color:#fff;padding:28px;border-radius:12px;border-left:5px solid #d4a54a;margin-top:20px;}.solution-card h3{font-size:1.3rem;display:flex;gap:12px;align-items:center;}.solution-card h3 i{color:#d4a54a;}.solution-card p{opacity:0.92;line-height:1.8;}.solution-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;}.solution-tags span{background:rgba(255,255,255,0.12);padding:4px 16px;border-radius:100px;font-size:0.8rem;border:1px solid rgba(255,255,255,0.08);}.pledge-box{max-width:600px;margin:20px auto 0;background:#fcf8f0;padding:36px 32px;border-radius:12px;border:1px solid #c8eed8;text-align:center;}.pledge-box p{font-size:1.05rem;color:#2d3d33;line-height:1.8;margin-bottom:16px;}.pledge-box .pledge-buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;}#pledgeMessage{margin-top:16px;font-weight:600;color:#2e8b57;min-height:28px;}.score-showcase{display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:20px;align-items:center;}.score-visual{background:linear-gradient(145deg,#e8f9ef,#fff);padding:28px;border-radius:12px;border:1px solid #c8eed8;}.score-visual .gauge{display:flex;align-items:center;gap:20px;flex-wrap:wrap;}.score-visual .gauge .number{font-size:3.6rem;font-weight:800;color:#256f45;line-height:1;}.score-visual .gauge .number small{font-size:1.2rem;font-weight:500;color:#5a7a64;}.score-visual .gauge .meta{font-size:0.9rem;color:#3d5a44;}.score-visual .gauge .meta strong{display:block;font-size:1rem;color:#1a1f1a;}.score-factors{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;}.score-factors .factor{background:rgba(255,255,255,0.7);padding:10px 14px;border-radius:12px;display:flex;align-items:center;gap:10px;border:1px solid #c8eed8;}.score-factors .factor i{font-size:1.1rem;color:#d4a54a;width:24px;}.score-factors .factor .info h5{font-size:0.8rem;font-weight:600;}.score-factors .factor .info p{font-size:0.7rem;color:#5a6e60;}.score-text h3{font-size:1.5rem;}.score-text p{color:#3d5a44;line-height:1.8;}.score-text .btn{margin-top:12px;}.quiz-option:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(46,139,87,0.10); }@media (max-width:768px){.problem-grid{grid-template-columns:1fr;}.score-showcase{grid-template-columns:1fr;}.score-factors{grid-template-columns:1fr;}.compare-selectors{flex-direction:column;align-items:center;}.compare-selectors select{width:100%;max-width:300px;}.compare-table th,.compare-table td{padding:8px 10px;font-size:0.8rem;}.features-grid{grid-template-columns:1fr;}}@media (max-width:480px){.compare-table th,.compare-table td{padding:6px 8px;font-size:0.7rem;}}`;
+            const fullHTML = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>VanaDarpan – ${type.charAt(0).toUpperCase()+type.slice(1)}</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"><style>${pageStyles}</style></head><body><div class="container"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;"><div style="font-size:1.3rem;font-weight:800;">Vana<span style="color:#1a4a2e;">Darpan</span></div><span class="back-link" onclick="window.close()">✕ Close Window</span></div>${bodyHTML}<div style="text-align:center;margin-top:30px;padding-top:20px;border-top:2px solid #c8eed8;font-size:0.8rem;color:#5a6e60;">🌳 VanaDarpan — Hariyali ka hisaab, ab hoga khaas.<br><span style="cursor:pointer;color:#2e8b57;font-weight:600;" onclick="window.close()">Close this window</span></div></div><script>${extraScript}<\/script></body></html>`;
+            win.document.write(fullHTML);
+            win.document.close();
+            win.focus();
+        }
+
+        // ─── HEADER SCROLL ───
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 40);
+        });
+
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+        hamburger.addEventListener('click', () => navLinks.classList.toggle('open'));
+        document.querySelectorAll('.nav-links button').forEach(btn => {
+            btn.addEventListener('click', () => navLinks.classList.remove('open'));
+        });
+
+        // ─── EXPOSE GLOBALS ───
+        window.openWindow = openWindow;
+        window.openLoginModal = openLoginModal;
+        window.closeLoginModal = closeLoginModal;
+        window.openSignupModal = openSignupModal;
+        window.closeSignupModal = closeSignupModal;
+        window.openDashboardModal = openDashboardModal;
+        window.closeDashboardModal = closeDashboardModal;
+        window.handleLogin = handleLogin;
+        window.handleSignup = handleSignup;
+        window.logout = logout;
+        window.toggleUserMenu = toggleUserMenu;
+        window.refreshDashboard = refreshDashboard;
+        window.switchMode = switchMode;
+        window.startQuiz = startQuiz;
+        window.nextQuestion = nextQuestion;
+        window.retryQuiz = retryQuiz;
+
+        // ─── INIT ───
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = getCurrentUser();
+            if (user) {
+                currentUser = user;
+                sessionStart = Date.now();
+                updateUIForLoggedIn();
+            }
+            switchMode('tourist');
+        });
+
+        console.log('🌿 VanaDarpan – Updated quote: "VanaDarpan ke sath."');
+    </script>
+</body>
+</html>
